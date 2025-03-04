@@ -3,3 +3,7 @@
     --font-Poppins: "Poppins", sans-serif;
     --font-Warnes: "Warnes", sans-serif;
 }
+body {
+    background-color: black;
+    color:azure;
+}
