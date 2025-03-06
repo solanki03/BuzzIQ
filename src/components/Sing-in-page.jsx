@@ -195,8 +195,8 @@ export function SingInPage() {
       <span className="absolute inset-0 bg-gradient-to-r from-[#A07CFE] via-[#FE8FB5] to-[#FFBE7B] animate-spin-border" />
       <Card className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-black px-6 py-8 text-white">
         <CardHeader className="text-center">
-          <CardTitle>Sing In</CardTitle>
-          <DialogDescription className="opacity-60">Sign in to BuzzIQ</DialogDescription>
+          <CardTitle>Sign In</CardTitle>
+          <DialogDescription>Sign in to BuzzIQ</DialogDescription>
         </CardHeader>
 
         <CardContent className="w-full">
