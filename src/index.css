@@ -1,20 +1,30 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-
 @custom-variant dark (&:is(.dark *));
+
 @theme {
-    --font-Poppins: "Poppins", sans-serif;
-    --font-Warnes: "Warnes", sans-serif;
+  --font-Poppins: "Poppins", sans-serif;
+  --font-Warnes: "Warnes", cursive;
+  --font-Montserrat: "Montserrat", sans-serif;
 }
+
 body {
-    background-color: black;
-    color:azure;
+  background-color: black;
+  color:azure;
 }
+
 body::-webkit-scrollbar {
   display: none;
 }
 
+h1, h2, h3, h4, h5, h6, label, thead {
+  font-family: var(--font-Poppins);
+}
+
+p, a, span, td, input {
+  font-family: var(--font-Montserrat);
+}
 
 :root {
     --background: oklch(1 0 0);
