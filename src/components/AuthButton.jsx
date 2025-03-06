@@ -1,111 +1,37 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-
-// Styled Components for Button and Avatar
-const Button = styled.button`
-  font-family: "Poppins", sans-serif;  // Added Poppins font
-  line-height: 1;
-  text-decoration: none;
-  display: inline-flex;
-  border: none;
-  cursor: pointer;
-  align-items: center;
-  gap: 0.75rem;
-  background-color: #000;
-  color: #fff;
-  border-radius: 10rem;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  padding-left: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #4F46E5;
-  }
-`;
-
-const IconWrapper = styled.div`
-  flex-shrink: 0;
-  width: 25px;
-  height: 25px;
-  position: relative;
-  color: ${(props) => props.color || "#4F46E5"};
-  background-color: #fff;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-
-  ${Button}:hover & {
-    color: #000;
-  }
-`;
-
-const Avatar = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #4f46e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const AvatarImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-`;
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { SingInPage } from "./Sing-in-page";
+import { SingUpPage } from "./Sing-up-page"; // Import the SignUp component
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const AuthButton = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // Dummy user data (Replace with actual authentication logic)
-  const user = {
-    name: "John Doe",
-  };
-
-  // Generate a default avatar URL using RoboHash
-  const defaultAvatarUrl = `https://robohash.org/${user.name}.png?size=40x40`;
-
-  // Handle Login (Replace with real authentication)
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+  const [isSignIn, setIsSignIn] = useState(true); // State to toggle between Sign In and Sign Up
 
   return (
-    <div>
-      {!isLoggedIn ? (
-        <Button onClick={handleLogin} color="#000">
-          <span>Log in</span>
-          <IconWrapper>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              fill="currentColor"
+    <Dialog>
+      <DialogTrigger>
+        <span className="relative inline-flex overflow-hidden rounded-lg p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-zinc-950 opacity-95 px-5 py-2 text-sm font-medium text-white backdrop-blur-3xl">
+            <DialogTitle>Login</DialogTitle>
+          </span>
+        </span>
+      </DialogTrigger>
+      <DialogContent className="bg-transparent p-10">
+        {isSignIn ? <SingInPage /> : <SingUpPage />} {/* Toggle between Sign In and Sign Up */}
+        <div className="text-center">
+          <span className="text-sm text-gray-400">
+            {isSignIn ? "Don't have an account? " : "Already have an account? "}
+            <button
+              onClick={() => setIsSignIn(!isSignIn)}
+              className="text-blue-500 hover:underline"
             >
-              <path d="M10 2H14V4H10V2ZM12 18C7.58 18 4 14.42 4 10C4 5.58 7.58 2 12 2C16.42 2 20 5.58 20 10C20 14.42 16.42 18 12 18ZM12 4C8.69 4 6 6.69 6 10C6 13.31 8.69 16 12 16C15.31 16 18 13.31 18 10C18 6.69 15.31 4 12 4Z"></path>
-            </svg>
-          </IconWrapper>
-        </Button>
-      ) : (
-        <Avatar>
-          <AvatarImage
-            src={defaultAvatarUrl}
-            alt={user.name}
-            title={user.name}
-          />
-        </Avatar>
-      )}
-    </div>
+              {isSignIn ? "Sign Up" : "Sign In"}
+            </button>
+          </span>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

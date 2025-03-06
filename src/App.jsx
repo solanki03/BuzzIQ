@@ -1,9 +1,18 @@
-import React from 'react';
-import Aurora from './components/Aurora';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import StartSessionButton from './components/Button';
-import AuthButton from './components/AuthButton';
-
+import React from "react";
+import Aurora from "./components/Aurora";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import StartSessionButton from "./components/Button";
+import AuthButton from "./components/AuthButton";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/clerk-react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import SSOCallback from "./pages/SSOCallback.jsx";
+import { Loader2 } from "lucide-react";
 
 const App = () => {
 
@@ -17,9 +26,21 @@ const App = () => {
   const topics = ["Comp. Fundamentals", "Comp. Science & Tech", "C Programming", "Java Programming", "Python Programming", "General Knowledge", "Verbal Ability", "Logical Reasoning", "Quantitative Aptitude", "Medical Science", "Biotechnology", "Soft Skills"];
 
   return (
-    <main className='w-full font-Poppins relative'>
+    <>
+      <ClerkLoading>
+        <main className="h-dvh w-full flex items-center justify-center flex-col">
+          <h1 className="text-[1.5vw] skeleton-text">
+            Initializing the Application
+          </h1>
+          <p className="text-[1vw] skeleton-text pb-5 pt-1">Please wait...</p>
+          <Loader2 className="animate-spin" />
+        </main>
+      </ClerkLoading>
+      <ClerkLoaded>
+        
+      <main className='w-full font-Poppins relative'>
       <Aurora
-        colorStops={["#1BCEEE", "#6065F0", "#B708F7"]}
+        colorStops={["#6F8ED8", "#812FAD", "#53E0F3"]}
         blend={0.5}
         amplitude={1.0}
         speed={0.6}
@@ -32,7 +53,8 @@ const App = () => {
             BuzzIQ
           </h1>
           <div className=''>
-            <AuthButton />
+            <SignedOut><AuthButton /></SignedOut>
+            <SignedIn><UserButton /></SignedIn>
           </div>
         </nav>
 
@@ -113,7 +135,15 @@ const App = () => {
         </div>
       </footer>
 
-    </main>
+      </main>
+
+        <Router>
+          <Routes>
+            <Route path="/sso-callback" element={<SSOCallback />} />
+          </Routes>
+        </Router>
+      </ClerkLoaded>
+    </>
   );
 };
 
