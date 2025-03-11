@@ -2,27 +2,21 @@ import React from "react";
 
 const StartSessionButton = () => {
   return (
-    <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-poppins font-light uppercase text-sm">
-      <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-md transform translate-y-0.5 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px"></span>
-
-      <span className="absolute top-0 left-0 w-full h-full rounded-md bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"></span>
-
-      <div className="relative flex items-center justify-between py-3 px-10 text-sm text-white rounded-md transform -translate-y-1 bg-gradient-to-r from-[#f27121] via-[#e94057] to-[#8a2387] gap-2 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
-        <span className="select-none">Get Started</span> {/* Fixed Text */}
-        
-        <svg
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="w-4 h-4 transition duration-250 group-hover:translate-x-1"
-        >
-          <path
-            clipRule="evenodd"
-            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-            fillRule="evenodd"
-          ></path>
-        </svg>
+    <div className="flex items-center justify-center">
+      <div className="relative group">
+        <button className="relative inline-block p-px font-semibold leading-6 text-white bg-gray-800 shadow-2xl cursor-pointer rounded-xl shadow-zinc-900 transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95">
+          <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-teal-400 via-blue-500 to-purple-500 p-[2px] opacity-40 transition-opacity duration-500 group-hover:opacity-100"></span>
+          <span className="relative z-10 block px-6 py-3 rounded-xl bg-gray-950">
+            <div className="relative z-10 flex items-center space-x-2">
+              <span className="transition-all duration-500 group-hover:translate-x-1">Let's get started</span>
+              <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-1" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path clipRule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" fillRule="evenodd" />
+              </svg>
+            </div>
+          </span>
+        </button>
       </div>
-    </button>
+    </div>
   );
 };
 
