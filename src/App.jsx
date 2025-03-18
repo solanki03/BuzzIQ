@@ -1,18 +1,14 @@
 import React from "react";
 import Aurora from "./components/Aurora";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import StartSessionButton from "./components/Button";
-import AuthButton from "./components/AuthButton";
+import StartSessionButton from "./components/StartSessionButton";
 import {
   ClerkLoaded,
   ClerkLoading,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from "@clerk/clerk-react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SSOCallback from "./pages/SSOCallback.jsx";
 import { Loader2 } from "lucide-react";
+import Navbar from "./components/Navbar";
+
 
 const App = () => {
   const devs = [
@@ -60,6 +56,7 @@ const App = () => {
           <Loader2 className="animate-spin" />
         </main>
       </ClerkLoading>
+
       <ClerkLoaded>
         <main className="w-full font-Poppins relative">
           <Aurora
@@ -71,19 +68,7 @@ const App = () => {
 
           <div className="h-dvh w-full flex flex-col items-center justify-center">
             {/* Navigation */}
-            <nav className="w-full flex justify-between items-center px-6 sm:px-10 py-6 absolute top-0 z-10">
-              <h1 className="text-white text-2xl md:text-3xl font-Warnes!">
-                BuzzIQ
-              </h1>
-              <div className="">
-                <SignedOut>
-                  <AuthButton />
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </div>
-            </nav>
+            <Navbar />
 
             {/* Hero Section */}
             <div className="flex flex-col items-center text-center text-white px-6 sm:px-10 mt-36 sm:mt-20">
@@ -101,7 +86,7 @@ const App = () => {
                 <img
                   src="https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   alt="User1"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white "
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white"
                 />
                 <img
                   src="https://plus.unsplash.com/premium_photo-1689551671548-79ff30459d2a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fHw%3D"
@@ -117,8 +102,8 @@ const App = () => {
                   Join with 500+ users and start a new experience
                 </span>
               </div>
-              <div className="mt-10 mb-20">
-                <StartSessionButton />
+              <div className="mt-12 mb-20">
+                <StartSessionButton name="Let's get started" />
               </div>
             </div>
           </div>
@@ -209,13 +194,10 @@ const App = () => {
               </div>
             </div>
           </footer>
+
+
         </main>
 
-        <Router>
-          <Routes>
-            <Route path="/sso-callback" element={<SSOCallback />} />
-          </Routes>
-        </Router>
       </ClerkLoaded>
     </>
   );
