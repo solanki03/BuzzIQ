@@ -187,9 +187,9 @@ const App = () => {
 
             {/* Bottom Copyright Section */}
             <div className="w-full flex justify-center text-center mt-6">
-              <div className="border-t border-gray-700 w-64 mb-5 pt-2">
+              <div className="border-t border-gray-700 w-86 mb-5 pt-2">
                 <p className="text-sm text-gray-400">
-                  &copy; {new Date().getFullYear()} All Rights Reserved
+                  &copy; {new Date().getFullYear()} All rights are reserved by <b>BuzzIQ</b>
                 </p>
               </div>
             </div>
