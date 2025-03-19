@@ -75,7 +75,7 @@ const QuizDashboard = () => {
             <div className='pt-24 flex flex-col gap-5 items-center justify-center'>
                 <h1 className='font-semibold text-3xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
                     <span>Quiz Dashboard:{" "}</span>
-                    <span className='text-slate-300'>Explore Your Knowledge</span>
+                    <span className='text-slate-300'>Unleash Your Potential & Take the Challenge!</span>
                 </h1>
                 <div className='max-w-6xl mx-auto px-8'>
                     <HoverEffect items={quizList} />
