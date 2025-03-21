@@ -6,7 +6,7 @@ const QuizDashboard = () => {
     const quizList = [
         {
             title: "Computer Fundamentals",
-            description: "Networking, Software Engineering, Internet Technology",
+            description: "Basic fundamental concepts, Internet Technology",
             image: "src/assets/comp_fm.png",
         },
     {
