@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { SingInPage } from "./Sing-in-page";
-import { SingUpPage } from "./Sing-up-page"; // Import the SignUp component
+import { SignInPage } from "./Sing-in-page";
+import { SignUpPage } from "./Sing-up-page"; // Import the SignUp component
 import { DialogTitle } from "@radix-ui/react-dialog";
 
 const AuthButton = () => {
@@ -18,7 +18,7 @@ const AuthButton = () => {
         </span>
       </DialogTrigger>
       <DialogContent className="bg-transparent p-10">
-        {isSignIn ? <SingInPage /> : <SingUpPage />} {/* Toggle between Sign In and Sign Up */}
+        {isSignIn ? <SignInPage /> : <SignUpPage />} {/* Toggle between Sign In and Sign Up */}
         <div className="text-center">
           <span className="text-sm text-gray-400">
             {isSignIn ? "Don't have an account? " : "Already have an account? "}

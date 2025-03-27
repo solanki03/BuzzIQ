@@ -74,7 +74,7 @@ const App = () => {
             <div className="flex flex-col items-center text-center text-white px-6 sm:px-10 mt-36 sm:mt-20">
               <h2 className="text-4xl sm:text-5xl xl:text-7xl font-semibold">
                 Are you a Trivia Titan? <br /> Prove it with{" "}
-                <span className="font-Warnes!">BuzzIQ</span>
+                <span className="font-Warnes! font-normal!">BuzzIQ</span>
               </h2>
               <p className="mt-8 text-sm text-gray-400 sm:text-base md:w-1/2">
                 Dive into a world of diverse quizzes, from tech to trivia.
@@ -86,20 +86,20 @@ const App = () => {
                 <img
                   src="https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   alt="User1"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover"
                 />
                 <img
                   src="https://plus.unsplash.com/premium_photo-1689551671548-79ff30459d2a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fHw%3D"
                   alt="User2"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white -ml-3"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
                 />
                 <img
                   src="https://plus.unsplash.com/premium_photo-1689977807477-a579eda91fa2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   alt="User3"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white -ml-3"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
                 />
                 <span className="ml-2 md:ml-4 text-[12px] sm:text-sm">
-                  Join with 500+ users and start a new experience
+                  Join with 100+ users and start a new experience
                 </span>
               </div>
               <div className="mt-12 mb-20">
@@ -189,7 +189,8 @@ const App = () => {
             <div className="w-full flex justify-center text-center mt-6">
               <div className="border-t border-gray-700 w-86 mb-5 pt-2">
                 <p className="text-sm text-gray-400">
-                  &copy; {new Date().getFullYear()} All rights are reserved by <b>BuzzIQ</b>
+                  <span className="font-Warnes! font-medium!">BuzzIQ{" "}</span>
+                  &copy; {new Date().getFullYear()} All Rights Reserved
                 </p>
               </div>
             </div>

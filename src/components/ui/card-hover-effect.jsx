@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import QuizButton from "../QuizButton";
 
-export const HoverEffect = ({ items, className, btn = "Start Test" }) => {
+export const HoverEffect = ({ items, className }) => {
     let [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
