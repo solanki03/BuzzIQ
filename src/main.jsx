@@ -8,6 +8,7 @@ import SSOCallback from './pages/SSOCallback.jsx'
 import QuizDashboard from './pages/QuizDashboard'
 import NotFound from './pages/NotFound'
 import QuizPage from './pages/QuizPage.jsx'
+import Results from './pages/Results.jsx'
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   {path:"/sso-callback", element: <SSOCallback />},
   {path:"/quiz-dashboard", element: <QuizDashboard />},
   {path:"/quiz-page", element: <QuizPage />},
+  {path:"/quiz-results", element: <Results />},
   {path:"*", element: <NotFound />}
 ]);
 

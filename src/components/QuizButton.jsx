@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import {
@@ -12,10 +12,12 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import GradientBtn from "@/components/GradientBtn"
-
+import AuthButton from './AuthButton';
+import { useUser } from '@clerk/clerk-react';
 
 const QuizButton = ({ name }) => {
     const [isChecked, setIsChecked] = useState(false)
+    const { isSignedIn } = useUser();
 
     return (
         <Dialog>
@@ -40,36 +42,49 @@ const QuizButton = ({ name }) => {
                     <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
 
-                <DialogHeader>
-                    <DialogTitle className={'text-fuchsia-400 text-center text-xl mb-2'}>Instructions</DialogTitle>
-                </DialogHeader>
+                {isSignedIn ? (
+                    <>
+                        <DialogHeader>
+                            <DialogTitle className={'text-fuchsia-400 text-center text-xl mb-2'}>Instructions</DialogTitle>
+                        </DialogHeader>
 
-                <DialogDescription className={'text-gray-300 px-2 font-medium'}>
-                    <p>1. The quiz consists of 15 questions.</p>
-                    <p>2. You have 15 minutes to complete this quiz.</p>
-                    <p>3. Once you start the quiz, you can't pause it.</p>
-                    <p>4. You can't skip any question.</p>
-                    <p>5. Once you start the quiz, you have to complete it.</p>
-                    <p>6. You can't resize your browser during the quiz.</p>
-                    <p>7. You can't switch tabs during the quiz.</p>
-                    <p>8. The quiz will automatically submit upon expiration of the time limit.</p>
-                </DialogDescription>
+                        <DialogDescription className={'text-gray-300 px-2 font-medium'}>
+                            <p>1. This quiz contains 15 questions.</p>
+                            <p>2. You have 15 minutes to complete the quiz.</p>
+                            <p>3. The quiz cannot be paused once started.</p>
+                            <p>4. All questions must be answered.</p>
+                            <p>5. You must complete the quiz in one session.</p>
+                            <p>6. Do not resize your browser window during the quiz.</p>
+                            <p>7. Switching browser tabs will result in automatic submission.</p>
+                            <p>8. The quiz will auto-submit when the time expires.</p>
+                        </DialogDescription>
 
-                <DialogFooter className={'flex-col! items-center mt-4'}>
-                    <div className='text-sm! text-fuchsia-300 flex items-center gap-2 justify-center mb-5'>
-                        <input 
-                            type="checkbox" 
-                            id="confirm" 
-                            name="confirm" 
-                            className='accent-fuchsia-200'
-                            onChange={(e) => setIsChecked(e.target.checked)} 
-                        />
-                        <label for="confirm">I've read and understood the instructions. Let's begin!</label>
-                    </div>
-                    <Link to={isChecked ? "/quiz-page" : "#"}>
-                        <GradientBtn name="Start Quiz" />
-                    </Link>
-                </DialogFooter>
+                        <DialogFooter className={'flex-col! items-center mt-4'}>
+                            <div className='text-sm! text-fuchsia-300 flex items-center gap-2 justify-center mb-5'>
+                                <input
+                                    type="checkbox"
+                                    id="confirm"
+                                    name="confirm"
+                                    className='accent-fuchsia-200 cursor-pointer'
+                                    onChange={(e) => setIsChecked(e.target.checked)}
+                                />
+                                <label htmlFor="confirm">I've read and understood the instructions. Let's begin!</label>
+                            </div>
+                            <Link to={isChecked ? "/quiz-page" : "#"}>
+                                <GradientBtn name="Start Quiz" />
+                            </Link>
+                        </DialogFooter>
+                    </>
+                ) : (
+                    <>
+                        <DialogHeader>
+                            <DialogTitle className={'text-fuchsia-400 text-xl text-center mb-2'}>Log In to Start Test</DialogTitle>
+                        </DialogHeader>
+                        <DialogFooter className={'flex-col! items-center mt-4'}>
+                            <AuthButton />
+                        </DialogFooter>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     )

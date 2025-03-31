@@ -4,14 +4,18 @@ import toast, { Toaster } from 'react-hot-toast';
 import Navbar from '@/components/Navbar';
 import GradientBtn from '@/components/GradientBtn';
 import stopwatch from '@/assets/stopwatch.png';
+import notificationTone from '@/assets/audio/notification_tone.mp3';
 
 const QuizPage = () => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [minutes, setMinutes] = useState(15);
+  const [minutes, setMinutes] = useState(1);
   const [seconds, setSeconds] = useState(0);
   const [timeUp, setTimeUp] = useState(false); // Track if time is up
 
   useEffect(() => {
+    const audio = new Audio(notificationTone); // Create an audio instance
+    audio.muted = false; // Ensure audio is not muted
+
     const timer = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
@@ -21,16 +25,15 @@ const QuizPage = () => {
 
         // Show toast when 1 min is left
         if (minutes === 1) {
-          toast("Last 1 min left!", {
-            icon: "⚠️",
-          });
+          toast("Last 1 min left!", { icon: "⚠️" });
+
+          // Play notification tone
+          audio.play().catch((error) => console.error("Error playing sound:", error));
         }
       } else {
         clearInterval(timer);
         setTimeUp(true); // Set time up to true
-        toast("Time's up! Submitting quiz...", {
-          icon: "⏳",
-        });
+        toast("Time's up! Submitting quiz...", { icon: "⏳" });
       }
     }, 1000);
 
@@ -38,11 +41,86 @@ const QuizPage = () => {
   }, [minutes, seconds]);
 
 
+  useEffect(() => {
+    // Prevent navigating back
+    const handleBack = (event) => {
+      event.preventDefault();
+      toast.error("You cannot go back during the quiz!", { icon: "🚫" });
+    };
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", handleBack);
+
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    // Detect window resize
+    const handleResize = () => {
+      toast.error("Window resizing is not allowed!", { icon: "🚫" });
+    };
+
+    // Detect tab switch
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.error("Tab switch detected! Submitting quiz...", { icon: "🚫" });
+        setTimeUp(true);
+      }
+    };
+
+    // Detect DevTools open
+    const detectDevTools = (event) => {
+      if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && event.keyCode === 73)) {
+        event.preventDefault();
+        toast.error("Inspecting the page is not allowed!");
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("keydown", detectDevTools);
+    document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("keydown", detectDevTools);
+      document.removeEventListener("contextmenu", (event) => event.preventDefault());
+    };
+  }, []);
+
+
+  // Prevent refreshing the page
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "You cannot refresh during the quiz!";
+      toast.error("Page refresh is disabled during the quiz!", { icon: "🚫" });
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
+        event.preventDefault();
+        toast.error("Refreshing is not allowed!", { icon: "🚫" });
+      }
+    };
+
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+
   return (
     <div className="w-full text-white">
-      <div className='sticky! w-full z-20 top-0'>
-        <Navbar />
-      </div>
+      <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
       <Toaster position="top-center"
         toastOptions={{
           duration: 4000,
@@ -56,8 +134,8 @@ const QuizPage = () => {
         }}
       />
 
-      <div className='pt-20 flex flex-col gap-9 items-center justify-center'>
-        <h1 className='font-semibold text-3xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
+      <div className='flex flex-col gap-9 items-center justify-center'>
+        <h1 className='font-semibold text-2xl sm:text-4xl text-center text-slate-300 block border-b-2 px-10 pb-4 border-slate-700'>
           <span>Computer Fundamentals</span>
         </h1>
 

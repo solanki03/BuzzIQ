@@ -5,61 +5,73 @@ import { HoverEffect } from '../components/ui/card-hover-effect'
 const QuizDashboard = () => {
     const quizList = [
         {
+            id: 1,
             title: "Computer Fundamentals",
             description: "Basic fundamental concepts, Internet Technology",
             image: "src/assets/comp_fm.png",
         },
-    {
+        {
+            id: 2,
             title: "Computer Science & Technology",
             description: "DSA, DBMS, OS, Cloud Computing, OOP Concepts",
             image: "src/assets/comp_tech.png",
         },
-    {
+        {
+            id: 3,
             title: "C Programming",
             description: "Fundamental Concepts of C Pregramming",
             image: "src/assets/c_prog.png",
         },
-    {
+        {
+            id: 4,
             title: "Java Programming",
             description: "Fundamental Concepts of Java",
             image: "src/assets/java.png",
         },
-    {
+        {
+            id: 5,
             title: "Python Programming",
             description: "Fundamental Concepts of Python",
             image: "src/assets/python.png",
         },
-    {
+        {
+            id: 6,
             title: "General Knowledge",
             description: "History, Geography, Science, Sports, Economics, Current Affairs, etc.",
             image: "src/assets/gk.png",
         },
-    {
+        {
+            id: 7,
             title: "Verbal Ability",
             description: "Concept of Verbal and Grammatical Knowledge",
             image: "src/assets/verbal.png",
         },
-    {
+        {
+            id: 8,
             title: "Logical Reasoning",
             description: "Distance & Direction, Blood Relation, Puzzles, Clock & Calendar, etc.",
             image: "src/assets/reasoning.png",
         },
-    {
+        {
+            id: 9,
             title: "Quantitative Aptitude",
             description: "Ratio, Percentage, Time-Speed-Distance, Work & Time, etc.",
             image: "src/assets/quantitative.png",
         },
-    {
+        {
+            id: 10,
             title: "Medical Science",
             description: "Concepts of Medical Science & Fields",
             image: "src/assets/medical.png",
         },
-    {
+        {
+            id: 11,
             title: "Biotechnology",
             description: "Human & Animal Health, Agriculture, Environment, etc.",
             image: "src/assets/biotech.png",
         },
-    {
+        {
+            id: 12,
             title: "Soft Skills",
             description: "Concept of Soft Skills in Professional & Daily Life",
             image: "src/assets/soft_skills.png",
@@ -68,14 +80,10 @@ const QuizDashboard = () => {
 
     return (
         <div className="w-full text-white">
-            <div className='sticky! w-full z-20 top-0'>
-            <Navbar />
-            </div>
+            <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
 
-            <div className='pt-24 flex flex-col gap-5 items-center justify-center'>
-                <h1 className='font-semibold text-3xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
-                    <span> Welcome to Quiz Dashboard{" "}</span>
-                    <br />
+            <div className='flex flex-col gap-5 items-center justify-center'>
+                <h1 className='font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
                     <span className='text-slate-300'>Unleash Your Potential & Take the Challenge!</span>
                 </h1>
                 <div className='max-w-6xl mx-auto px-8'>

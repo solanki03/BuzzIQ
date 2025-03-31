@@ -68,7 +68,7 @@ const App = () => {
 
           <div className="h-dvh w-full flex flex-col items-center justify-center">
             {/* Navigation */}
-            <Navbar />
+            <Navbar className="bg-transparent" />
 
             {/* Hero Section */}
             <div className="flex flex-col items-center text-center text-white px-6 sm:px-10 mt-36 sm:mt-20">
@@ -111,7 +111,7 @@ const App = () => {
           {/* Footer */}
 
           <footer className="w-full flex flex-col justify-center items-center px-8 sm:px-15 text-white">
-            <div className="container flex flex-wrap justify-around items-center border-t border-gray-700 py-8">
+            <div className="container flex flex-wrap max-sm:justify-between justify-around items-center border-t border-gray-700 py-8">
               {/* Left Section - Branding */}
               <div className="mb-6 md:mb-0">
                 <h2 className="text-2xl md:text-3xl font-Warnes! text-white">
