@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import QuizButton from "../QuizButton";
 
-export const HoverEffect = ({ items, className, btn = "Start Test" }) => {
+export const HoverEffect = ({ items, className }) => {
     let [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
@@ -11,6 +11,7 @@ export const HoverEffect = ({ items, className, btn = "Start Test" }) => {
             {items.map((item, idx) => (
                 <div
                     className="relative group block p-2 h-full w-full"
+                    key={item.id}
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
                 >

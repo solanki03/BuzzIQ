@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { DialogDescription } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
-export function SingInPage() {
+export function SignInPage() {
   const { signIn, isLoaded } = useSignIn();
   const { signOut } = useClerk(); // Use useClerk to access signOut
   const [email, setEmail] = useState("");
