@@ -8,7 +8,7 @@ import notificationTone from '@/assets/audio/notification_tone.mp3';
 
 const QuizPage = () => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [minutes, setMinutes] = useState(1);
+  const [minutes, setMinutes] = useState(15);
   const [seconds, setSeconds] = useState(0);
   const [timeUp, setTimeUp] = useState(false); // Track if time is up
 
