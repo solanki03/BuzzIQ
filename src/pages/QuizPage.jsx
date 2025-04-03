@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import Navbar from '@/components/Navbar';
 import GradientBtn from '@/components/GradientBtn';
-import stopwatch from '@/assets/stopwatch.png';
+import stopwatch from '@/assets/images/stopwatch.png';
 import notificationTone from '@/assets/audio/notification_tone.mp3';
 
 const QuizPage = () => {
@@ -140,7 +140,7 @@ const QuizPage = () => {
         </h1>
 
         {/* Quiz Card */}
-        <div className='relative bg-slate-900/50 grid w-full max-w-3/4 lg:max-w-3/5 gap-4 rounded-xl ring-1 ring-fuchsia-300 py-9 px-8 p-6 shadow-lg duration-200'>
+        <div className='relative bg-slate-900/50 grid w-full max-w-5/6 lg:max-w-4/6 gap-4 rounded-xl ring-1 ring-fuchsia-300 py-9 px-6 shadow-lg duration-200'>
 
           {!timeUp ? (
             <>
@@ -152,7 +152,7 @@ const QuizPage = () => {
 
               {/* Question and Options*/}
               <div className='flex flex-col gap-8 mt-5'>
-                <div className='text-xl font-semibold text-fuchsia-400 px-3'>
+                <div className='text-lg md:text-xl font-semibold text-fuchsia-400 px-3'>
                   <p>1. Who is the father of Computers?</p>
                 </div>
 
@@ -166,7 +166,7 @@ const QuizPage = () => {
                   ].map((option) => (
                     <div
                       key={option.id}
-                      className={`flex items-center gap-3 text-lg px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${selectedOption === option.value ? "bg-fuchsia-800" : "hover:bg-fuchsia-900"
+                      className={`flex items-center gap-3 md:text-lg px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${selectedOption === option.value ? "bg-fuchsia-800" : "hover:bg-fuchsia-900"
                         }`}
                       onClick={() => setSelectedOption(option.value)}
                     >
@@ -203,6 +203,16 @@ const QuizPage = () => {
               </Link>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Bottom Copyright Section */}
+      <div className="absolute bottom-0 w-full flex justify-center text-center">
+        <div className="mb-5">
+          <p className="text-sm text-gray-400">
+            <span className="font-Warnes! font-medium!">BuzzIQ{" "}</span>
+            &copy; {new Date().getFullYear()} All Rights Reserved
+          </p>
         </div>
       </div>
     </div>
