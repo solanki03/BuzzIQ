@@ -62,22 +62,22 @@ const Results = () => {
         </h1>
 
         <div className="flex flex-col w-full max-w-5xl rounded-xl bg-slate-900/50 ring-1 ring-fuchsia-300 px-4 py-6 sm:px-8">
-        
+
           {/* Home and Download Result button */}
-        <div className='flex justify-between items-center'>
-          <button
-            className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-            onClick={() => navigate('/')}
-          >
-            <House />
-          </button>
-          <button
-            className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-            onClick={onButtonClick}
-          >
-            <Download />
-          </button>
-        </div>
+          <div className='flex justify-between items-center'>
+            <button
+              className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
+              onClick={() => navigate('/')}
+            >
+              <House />
+            </button>
+            <button
+              className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
+              onClick={onButtonClick}
+            >
+              <Download />
+            </button>
+          </div>
 
           <div className='flex flex-col md:flex-row justify-between gap-6 w-full'>
 

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const GradientBtn = ({ name, onClick = () => {} }) => {
+const GradientBtn = ({ name, onClick = () => { } }) => {
     return (
-        <button 
+        <button
             className="relative h-10 px-8 rounded-lg overflow-hidden transition-all duration-500 group"
             onClick={onClick}
         >
