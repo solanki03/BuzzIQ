@@ -15,21 +15,21 @@ import { Loader2 } from 'lucide-react'
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
+  throw new Error("Missing Publishable Key");
 }
 
 const router = createBrowserRouter([
-  {path:"/", element: <App />},
-  {path:"/sso-callback", element: <SSOCallback />},
-  {path:"/quiz-dashboard", element: <QuizDashboard />},
-  {path:"/quiz-page", element: <QuizPage />},
-  {path:"/quiz-results", element: <Results />},
-  {path:"*", element: <NotFound />}
+  { path: "/", element: <App /> },
+  { path: "/sso-callback", element: <SSOCallback /> },
+  { path: "/quiz-dashboard", element: <QuizDashboard /> },
+  { path: "/quiz-page", element: <QuizPage /> },
+  { path: "/quiz-results", element: <Results /> },
+  { path: "*", element: <NotFound /> }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       
       <ClerkLoading>
         <main className="h-dvh w-full flex items-center justify-center flex-col">
@@ -46,5 +46,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </ClerkLoaded>
 
     </ClerkProvider>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
