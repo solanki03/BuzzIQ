@@ -81,7 +81,7 @@ const QuizButton = ({ name }) => {
                             <DialogTitle className={'text-fuchsia-400 text-xl text-center mb-2'}>Log In to Start Test</DialogTitle>
                         </DialogHeader>
                         <DialogFooter className={'flex-col! items-center mt-4'}>
-                            <AuthButton />
+                            <AuthButton afterSignInUrl="/quiz-dashboard" afterSignUpUrl="/quiz-dashboard"/>
                         </DialogFooter>
                     </>
                 )}

@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { DialogDescription } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
-export function SignInPage() {
+export function SignInPage({afterSignInUrl}) {
   const { signIn, isLoaded } = useSignIn();
   const { signOut } = useClerk(); // Use useClerk to access signOut
   const [email, setEmail] = useState("");
@@ -79,7 +79,7 @@ export function SignInPage() {
 
       if (result.status === "complete") {
         console.log("Signed in:", result);
-        window.location.href = "/"; // Redirect to home page
+        window.location.href = afterSignInUrl ? afterSignInUrl : "/"; // Redirect to home page
       } else {
         console.log("Further verification required:", result);
       }
@@ -159,7 +159,7 @@ export function SignInPage() {
 
       if (result.status === "complete") {
         console.log("Password reset successfully!");
-        window.location.href = "/"; // Redirect to home page
+        window.location.href = afterSignInUrl ? afterSignInUrl : "/"; // Redirect to home page
       } else {
         console.log("Further verification required:", result);
       }
@@ -178,7 +178,7 @@ export function SignInPage() {
       await signIn.authenticateWithRedirect({
         strategy: `oauth_${provider}`,
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/dashboard", // Change this to your desired destination after login
+        redirectUrlComplete: afterSignInUrl ? afterSignInUrl : "/", // Change this to your desired destination after login
       });
     } catch (err) {
       console.error("OAuth Sign-In Error:", err.errors?.[0]?.message || "Something went wrong.");

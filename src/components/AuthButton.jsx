@@ -4,7 +4,7 @@ import { SignInPage } from "./Sing-in-page";
 import { SignUpPage } from "./Sing-up-page"; // Import the SignUp component
 import { DialogTitle } from "@radix-ui/react-dialog";
 
-const AuthButton = () => {
+const AuthButton = ({afterSignInUrl, afterSignUpUrl}) => {
   const [isSignIn, setIsSignIn] = useState(true); // State to toggle between Sign In and Sign Up
 
   return (
@@ -18,7 +18,7 @@ const AuthButton = () => {
         </span>
       </DialogTrigger>
       <DialogContent className="bg-transparent p-10">
-        {isSignIn ? <SignInPage /> : <SignUpPage />} {/* Toggle between Sign In and Sign Up */}
+        {isSignIn ? <SignInPage afterSignInUrl={afterSignInUrl} /> : <SignUpPage afterSignUpUrl={afterSignUpUrl} />} {/* Toggle between Sign In and Sign Up */}
         <div className="text-center">
           <span className="text-sm text-gray-400">
             {isSignIn ? "Don't have an account? " : "Already have an account? "}

@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { DialogDescription } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
-export function SignUpPage() {
+export function SignUpPage({afterSignUpUrl}) {
   const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,7 +119,7 @@ export function SignUpPage() {
       console.log("User Profile Data:", { name, profession, interestedField });
 
       // Redirect to the home page or dashboard
-      window.location.href = "/";
+      window.location.href = afterSignUpUrl ? afterSignUpUrl : "/";
     } catch (err) {
       console.error("Profile submission error:", err);
       setError("Failed to save profile. Please try again.");

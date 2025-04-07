@@ -2,11 +2,6 @@ import React from "react";
 import Aurora from "./components/Aurora";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import StartSessionButton from "./components/StartSessionButton";
-import {
-  ClerkLoaded,
-  ClerkLoading,
-} from "@clerk/clerk-react";
-import { Loader2 } from "lucide-react";
 import Navbar from "./components/Navbar";
 
 
@@ -46,19 +41,7 @@ const App = () => {
   ];
 
   return (
-    <>
-      <ClerkLoading>
-        <main className="h-dvh w-full flex items-center justify-center flex-col">
-          <h1 className="text-[1.5vw] skeleton-text">
-            Initializing the Application
-          </h1>
-          <p className="text-[1vw] skeleton-text pb-5 pt-1">Please wait...</p>
-          <Loader2 className="animate-spin" />
-        </main>
-      </ClerkLoading>
-
-      <ClerkLoaded>
-        <main className="w-full font-Poppins relative">
+      <main className="w-full font-Poppins relative">
           <Aurora
             colorStops={["#6F8ED8", "#812FAD", "#53E0F3"]}
             blend={0.5}
@@ -198,9 +181,6 @@ const App = () => {
 
 
         </main>
-
-      </ClerkLoaded>
-    </>
   );
 };
 
