@@ -8,7 +8,7 @@ import notificationTone from "@/assets/audio/notification_tone.mp3";
 
 const QuizPage = () => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timeLeft, setTimeLeft] = useState({ minutes: 15, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({ minutes: 10, seconds: 0 });
   const [timeUp, setTimeUp] = useState(false);
   const audioRef = useRef(new Audio(notificationTone));
   const timerRef = useRef(null);
