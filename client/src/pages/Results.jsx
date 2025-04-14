@@ -1,24 +1,85 @@
-import React, { useEffect, useCallback, useRef } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toPng } from 'html-to-image';
+import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import GradientBtn from '@/components/GradientBtn';
 import { PieChartComponent } from '@/components/PieChart';
 import { Download, House } from 'lucide-react';
+import { useUser } from '@clerk/clerk-react';
 
 const Results = () => {
   const navigate = useNavigate();
-  const ref = useRef(null); // Reference for capturing the image
+  const location = useLocation();
+  const ref = useRef(null);
+  const { user } = useUser();
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Get quiz results from navigation state
+  const { topic, score, totalQuestions, correctAnswers, results, timestamp } = location.state || {};
+  
+  // Calculate derived values
+  const wrongAnswers = totalQuestions - correctAnswers;
+  const accuracy = score + '%';
+  const timeTaken = '10 min 10 sec'; // You can calculate this from timestamp if needed
+
+  // Format topic name with proper capitalization
+  const formatTopicName = (str) => {
+    if (!str) return 'Computer Fundamentals';
+    return str
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const formattedTopic = formatTopicName(topic);
 
   const resultInfo = [
-    { label: 'Topic', value: 'Computer Fundamentals' },
-    { label: 'Total Questions', value: 15 },
-    { label: 'Attempted Questions', value: 15 },
-    { label: 'Correct Answers', value: 12 },
-    { label: 'Wrong Answers', value: 3 },
-    { label: 'Accuracy', value: '80%' },
-    { label: 'Time Taken', value: '10 min 10 sec' },
+    { label: 'Topic', value: formattedTopic },
+    { label: 'Total Questions', value: totalQuestions || 15 },
+    { label: 'Attempted Questions', value: results?.length || 15 },
+    { label: 'Correct Answers', value: correctAnswers || 12 },
+    { label: 'Wrong Answers', value: wrongAnswers || 3 },
+    { label: 'Accuracy', value: accuracy || '80%' },
+    { label: 'Time Taken', value: timeTaken },
   ];
+
+  // Filter only wrong answers for analysis
+  const wrongAnswersList = results?.filter(question => 
+    question.userAnswer && question.userAnswer !== question.answer
+  ) || [];
+
+  // Save results to backend
+
+const userId = user?.id; // Or any unique user identifier from Clerk
+
+// Save results to backend
+useEffect(() => {
+  const saveResults = async () => {
+    if (!userId || !topic || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      await axios.post('http://localhost:5000/v1/results', {
+        userId, // Send user ID for collection naming
+        username: user.username || user.fullName || user.emailAddresses[0]?.emailAddress,
+        topic: formattedTopic,
+        totalQuestions,
+        correctAnswers,
+        wrongAnswers,
+        notAttempted: totalQuestions - (results?.length || 0),
+        score,
+        details: wrongAnswersList // Store only wrong answers details
+      });
+    } catch (err) {
+      console.error('Failed to save results:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  saveResults();
+}, [userId, topic, totalQuestions, correctAnswers, results, score, user]);
 
   // Prevent going back to QuizPage
   useEffect(() => {
@@ -49,7 +110,6 @@ const Results = () => {
         console.error('Failed to capture image:', err);
       });
   }, [ref]);
-
 
   return (
     <div className="w-full text-white mb-10">
@@ -92,19 +152,45 @@ const Results = () => {
                   </div>
                 ))}
               </div>
+              
+              {/* Wrong Answers Analysis */}
+              <div className="mt-4">
+                <h3 className="text-xl font-semibold mb-3 text-center">Incorrect Answers</h3>
+                {wrongAnswersList.length > 0 ? (
+                  <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
+                    {wrongAnswersList.map((question, index) => (
+                      <div key={index} className="bg-slate-800/30 p-3 rounded-lg">
+                        <p className="font-medium text-fuchsia-300">Q{question.id}: {question.question}</p>
+                        <p className="mt-1 text-sm text-red-400">
+                          Your answer: {question.userAnswer}
+                        </p>
+                        <p className="text-sm text-green-400">Correct answer: {question.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-400 py-4">All answers were correct! Great job!</p>
+                )}
+              </div>
             </div>
 
             {/* Pie Chart */}
             <div className="flex flex-col md:w-1/2">
               <h2 className='text-2xl font-semibold text-center'>Performance Overview</h2>
-              <PieChartComponent />
+              <PieChartComponent 
+                correctAnswers={correctAnswers || 12} 
+                wrongAnswers={wrongAnswers || 3}
+              />
             </div>
           </div>
 
           {/* Back to Dashboard, Retake Quiz */}
-          <div className='flex flex-row items-center justify-between'>
+          <div className='flex flex-row items-center justify-between mt-6'>
             <GradientBtn name="Dashboard" onClick={() => navigate('/quiz-dashboard')} />
-            <GradientBtn name="Retake Quiz" onClick={() => navigate('/quiz-page')} />
+            <GradientBtn 
+              name="Retake Quiz" 
+              onClick={() => navigate(`/quiz/${topic || 'computer_fundamentals'}`)} 
+            />
           </div>
         </div>
 
@@ -119,7 +205,7 @@ const Results = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Results
+export default Results;

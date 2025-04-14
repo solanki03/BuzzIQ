@@ -15,9 +15,17 @@ import GradientBtn from "@/components/GradientBtn"
 import AuthButton from './AuthButton';
 import { useUser } from '@clerk/clerk-react';
 
-const QuizButton = ({ name }) => {
+const QuizButton = ({ name, topic }) => {
     const [isChecked, setIsChecked] = useState(false)
     const { isSignedIn } = useUser();
+
+
+    // Convert topic to URL-friendly format
+    const getQuizPath = () => {
+        return topic 
+            ? `/quiz/${topic.toLowerCase().replace(/\s+/g, '_')}`
+            : "#";
+    };
 
     return (
         <Dialog>
@@ -71,7 +79,7 @@ const QuizButton = ({ name }) => {
                                 />
                                 <label htmlFor="confirm">I've read and understood the instructions. Let's begin!</label>
                             </div>
-                            <Link to={isChecked ? "/quiz-page" : "#"}>
+                            <Link to={isChecked ? getQuizPath() : "#"}>
                                 <GradientBtn name="Start Quiz" />
                             </Link>
                         </DialogFooter>

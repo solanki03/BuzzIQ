@@ -32,7 +32,7 @@ export const HoverEffect = ({ items, className }) => {
             <CardImage>{item.image}</CardImage>
             <CardTitle>{item.title}</CardTitle>
             <CardDescription>{item.description}</CardDescription>
-            <QuizButton name="Start Test" />
+            <QuizButton name="Start Test" topic={item.title} />
           </Card>
         </div>
       ))}

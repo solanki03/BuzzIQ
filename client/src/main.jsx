@@ -22,7 +22,7 @@ const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/sso-callback", element: <SSOCallback /> },
   { path: "/quiz-dashboard", element: <QuizDashboard /> },
-  { path: "/quiz-page", element: <QuizPage /> },
+  { path: "/quiz/:topic", element: <QuizPage /> },
   { path: "/quiz-results", element: <Results /> },
   { path: "*", element: <NotFound /> }
 ]);
