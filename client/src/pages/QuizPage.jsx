@@ -21,6 +21,8 @@ const QuizPage = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const audioRef = useRef(new Audio(notificationTone));
   const timerRef = useRef(null);
+  const quizStartTime = new Date().toISOString(); // Store this when quiz begins
+
 
   // Fetch questions from backend
   useEffect(() => {
@@ -88,6 +90,77 @@ const QuizPage = () => {
     }));
   };
 
+  // Fullscreen logic (keep existing)
+  useEffect(() => {
+    const enterFullScreen = () => {
+      const doc = document.documentElement;
+      if (doc.requestFullscreen) doc.requestFullscreen();
+      else if (doc.mozRequestFullScreen) doc.mozRequestFullScreen();
+      else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+      else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
+    };
+
+    const handleFullScreenChange = () => {
+      if (!document.fullscreenElement) {
+        toast.error("Fullscreen exited! Submitting quiz...", { icon: "🚫" });
+        setTimeUp(true);
+      }
+    };
+
+    enterFullScreen();
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => document.removeEventListener("fullscreenchange", handleFullScreenChange);
+  }, []);
+
+  // Security restrictions (keep existing)
+  useEffect(() => {
+    const handleRestrictedKeys = (event) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.key === "F5" || event.keyCode === 123) {
+        event.preventDefault();
+        toast.error("Restricted keys are disabled!", { icon: "🚫" });
+      }
+    };
+
+    const handleBack = (event) => {
+      event.preventDefault();
+      toast.error("You cannot go back during the quiz!", { icon: "🚫" });
+    };
+
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "You cannot refresh during the quiz!";
+      toast.error("Page refresh is disabled during the quiz!", { icon: "🚫" });
+    };
+
+    window.history.pushState(null, null, window.location.href);
+    document.addEventListener("keydown", handleRestrictedKeys);
+    window.addEventListener("popstate", handleBack);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    return () => {
+      document.removeEventListener("keydown", handleRestrictedKeys);
+      window.removeEventListener("popstate", handleBack);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("contextmenu", (event) => event.preventDefault());
+    };
+  }, []);
+
+  // Tab visibility (keep existing)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.error("Tab switch detected! Submitting quiz...", { icon: "🚫" });
+        setTimeUp(true);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
   // Navigation handlers
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -131,7 +204,7 @@ const QuizPage = () => {
       totalQuestions: questions.length,
       correctAnswers,
       results,
-      timestamp: new Date().toISOString()
+      timestamp: quizStartTime
     };
 
     // Navigate to results page with data
