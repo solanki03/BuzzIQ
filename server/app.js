@@ -1,17 +1,28 @@
-//here I have setup the Express, middleware, and routes
 const express = require('express');
-const cors = require('cors');
-
+const mongoose = require('mongoose');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
-//routes will be added here
-//app.use('/api/quiz', require('./routes/quizRoutes'));
+// Route to fetch documents from any collection
+app.get('/v1/questions/:collectionName', async (req, res) => {
+  try {
+    const collectionName = req.params.collectionName;
+    const db = mongoose.connection.db;
+    
+    // Validate collection exists 
+    const collections = await db.listCollections().toArray();
+    const collectionExists = collections.some(c => c.name === collectionName);
+    
+    if (!collectionExists) {
+      return res.status(404).json({ error: 'Collection not found' });
+    }
 
-app.get('/', (req, res) => {
-    res.send(' BuzzIQ Backend is running...');
+    const docs = await db.collection(collectionName).find({}).toArray();
+    res.json(docs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = app;
