@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: true }));
 // Results database connection
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
   dbName: 'BuzzIQ_Assects',
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+ // useNewUrlParser: true,
+ //cls useUnifiedTopology: true
 });
 
 // Route to fetch documents from any collection
