@@ -48,24 +48,7 @@ const createCollectionName = (username) => {
     .replace(/^_|_$/g, '');      // Remove leading/trailing underscores
 };
 
-// Result Schema
-const resultSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  username: { type: String, required: true },
-  topic: { type: String, required: true },
-  totalQuestions: { type: Number, required: true },
-  correctAnswers: { type: Number, required: true },
-  wrongAnswers: { type: Number, required: true },
-  notAttempted: { type: Number, required: true },
-  score: { type: Number, required: true },
-  details: { type: Array, default: [] }
-}, { timestamps: true });
 
-// Dynamic model creation using username
-const getResultModel = (username) => {
-  const collectionName = `results_${createCollectionName(username)}`;
-  return resultsDB.model(collectionName, resultSchema, collectionName);
-};
 
 // Save quiz results endpoint
 app.post('/v1/results', async (req, res) => {
