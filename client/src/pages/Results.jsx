@@ -7,6 +7,7 @@ import GradientBtn from '@/components/GradientBtn';
 import { PieChartComponent } from '@/components/PieChart';
 import { Download, House } from 'lucide-react';
 import { useUser } from '@clerk/clerk-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Results = () => {
   const navigate = useNavigate();
@@ -14,44 +15,36 @@ const Results = () => {
   const ref = useRef(null);
   const { user } = useUser();
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [saveError, setSaveError] = useState(null);
+  const saveAttempts = useRef(0);
+  const maxAttempts = 3; // Maximum number of save attempts
+  const retryDelay = 5000; // 5 seconds delay between attempts
   
   // Safely extract quiz results with proper defaults
   const quizData = location.state || {};
   const {
     topic = null,
-    score = 0,
     totalQuestions = 0,
-    correctAnswers = 0,
     results = [],
-    timestamp = null
+    timeTaken = 0,
   } = quizData;
 
-    // Calculate time taken from timestamp
-const calculateTimeTaken = (startTime) => {
-  if (!startTime) return '0 min 0 sec'; // Default if no timestamp
-  
-  try {
-    const startDate = new Date(startTime);
-    const endDate = new Date(); // Current time when results are shown
-    const diffInSeconds = Math.floor((endDate - startDate) / 1000);
-    
-    const minutes = Math.floor(diffInSeconds / 60);
-    const seconds = diffInSeconds % 60;
-    
-    return `${minutes} min ${seconds} sec`;
-  } catch (error) {
-    console.error('Error calculating time:', error);
-    return '0 min 0 sec'; // Fallback if calculation fails
-  }
-};
+  // Calculate actual metrics from results array
+  const correctAnswers = results.filter(q => q.isCorrect).length;
+  const attemptedQuestions = results.filter(q => q.userAnswer !== undefined && q.userAnswer !== null).length;
+  const wrongAnswers = results.filter(q => q.userAnswer && !q.isCorrect).length;
+  const notAttempted = totalQuestions - attemptedQuestions;
 
-  // Calculate derived values safely
-  const wrongAnswers = Math.max(0, totalQuestions - correctAnswers);
-  const notAttempted = Math.max(0, totalQuestions - results.length);
-  const accuracy = totalQuestions > 0 
-    ? `${Math.round((correctAnswers / totalQuestions) * 100)}%` 
-    : '0%';
+  // Format time taken from seconds to minutes and seconds
+  const formatTimeTaken = (seconds) => {
+    if (typeof seconds !== 'number' || seconds < 0) {
+      return '0 min 0 sec';
+    }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes} min ${remainingSeconds} sec`;
+  };
 
   // Format topic name with proper capitalization
   const formatTopicName = (str) => {
@@ -68,56 +61,76 @@ const calculateTimeTaken = (startTime) => {
   const resultInfo = [
     { label: 'Topic', value: formattedTopic },
     { label: 'Total Questions', value: totalQuestions },
-    { label: 'Attempted Questions', value: results.length },
+    { label: 'Attempted Questions', value: attemptedQuestions },
     { label: 'Correct Answers', value: correctAnswers },
     { label: 'Wrong Answers', value: wrongAnswers },
     { label: 'Not Attempted', value: notAttempted },
-    { label: 'Accuracy', value: accuracy },
-    { label: 'Time Taken', value: calculateTimeTaken(timestamp) },
+    { label: 'Time Taken', value: formatTimeTaken(timeTaken) },
   ];
 
-  // Filter only wrong answers for analysis
+  // Filter only wrong answers for analysis (user answered but was incorrect)
   const wrongAnswersList = results.filter(question => 
     question.userAnswer && question.userAnswer !== question.answer
   );
 
-  // Save results to backend
-  useEffect(() => {
-    if (!user || !topic || isSaving) return;
+  // Save results to backend with retry logic
+  const saveResults = useCallback(async () => {
+    if (!user || !topic || hasSaved || isSaving || saveAttempts.current >= maxAttempts) return;
 
-    const saveResults = async () => {
-      setIsSaving(true);
-      setSaveError(null);
+    setIsSaving(true);
+    setSaveError(null);
+    const currentAttempt = saveAttempts.current + 1;
 
-      try {
-        const payload = {
-          userId: user.id,
-          username: user.username || user.fullName || user.primaryEmailAddress?.emailAddress,
-          topic: formattedTopic,
-          totalQuestions,
-          correctAnswers,
-          wrongAnswers,
-          notAttempted,
-          score: Math.round((correctAnswers / totalQuestions) * 100),
-          details: wrongAnswersList
-        };
+    try {
+      const payload = {
+        userId: user.id,
+        username: user.username || user.fullName || user.primaryEmailAddress?.emailAddress,
+        topic: formattedTopic,
+        totalQuestions,
+        correctAnswers,
+        wrongAnswers,
+        notAttempted,
+        timeTaken
+      };
 
-        const response = await axios.post('http://localhost:5000/v1/results', payload);
-        
-        if (!response.data.success) {
-          throw new Error(response.data.error || 'Failed to save results');
-        }
-      } catch (err) {
-        setSaveError(err.response?.data?.error || err.message);
-        console.error('Error saving results:', err);
-      } finally {
-        setIsSaving(false);
+      console.log(payload)
+      toast.loading(`Saving results (attempt ${currentAttempt} of ${maxAttempts})...`);
+      const response = await axios.post('http://localhost:5000/v1/results', payload);
+      if (!response.data.success) {
+        throw new Error(response.data.error || 'Failed to save results');
       }
-    };
 
+      // Success case
+      toast.dismiss();
+      toast.success('Results saved successfully!');
+      setHasSaved(true);
+    } catch (err) {
+      saveAttempts.current += 1;
+      const errorMessage = err.response?.data?.error || err.message;
+      setSaveError(errorMessage);
+      console.error('Error saving results:', err);
+      toast.dismiss();
+
+      if (saveAttempts.current < maxAttempts) {
+        toast.error(`Failed to save (attempt ${saveAttempts.current} of ${maxAttempts}). Retrying in 5 seconds...`);
+        // Retry after delay if we haven't reached max attempts
+        const retryTimer = setTimeout(() => {
+          saveResults();
+        }, retryDelay);
+        
+        return () => clearTimeout(retryTimer);
+      } else {
+        // Final failure
+        toast.error('Failed to save results after multiple attempts. Please try again later.');
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  }, [user, topic, totalQuestions, correctAnswers, results, timeTaken, formattedTopic, isSaving, hasSaved]);
+
+  useEffect(() => {
     saveResults();
-  }, [user, topic, totalQuestions, correctAnswers, results, score]);
-
+  }, [saveResults]);
 
   // Prevent going back to QuizPage
   useEffect(() => {
@@ -148,8 +161,6 @@ const calculateTimeTaken = (startTime) => {
       .catch((err) => {
         console.error('Failed to capture image:', err);
       });
-
-
   }, []);
 
   useEffect(() => {
@@ -157,26 +168,11 @@ const calculateTimeTaken = (startTime) => {
       navigate('/quiz-dashboard', { replace: true });
     }
   }, [location.state, navigate]);
-  
-
-
 
   return (
     <div className="w-full text-white mb-10">
       <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
-
-      {/* Save status indicators */}
-      {isSaving && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-900 text-white px-4 py-2 rounded">
-          Saving your results...
-        </div>
-      )}
-      
-      {saveError && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-900 text-white px-4 py-2 rounded">
-          Error: {saveError}
-        </div>
-      )}
+      <Toaster position="top-center" reverseOrder={false} />
 
       <div ref={ref} className='flex flex-col gap-7 items-center justify-center px-5 bg-black'>
         <h1 className='font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
@@ -238,6 +234,7 @@ const calculateTimeTaken = (startTime) => {
               <PieChartComponent 
                 correctAnswers={correctAnswers} 
                 wrongAnswers={wrongAnswers}
+                notAttempted={notAttempted}
               />
             </div>
           </div>

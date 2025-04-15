@@ -8,41 +8,32 @@ import {
     ChartLegendContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-    { browser: "chrome", visitors: 275, fill: "var(--chart-1)" },
-    { browser: "safari", visitors: 200, fill: "var(--chart-2)" },
-    { browser: "firefox", visitors: 187, fill: "var(--chart-3)" },
-    { browser: "edge", visitors: 173, fill: "var(--chart-4)" },
-    { browser: "other", visitors: 90, fill: "var(--chart-5)" },
-];
-
 const chartConfig = {
-    visitors: {
-        label: "Visitors",
-    },
-    chrome: {
-        label: "Chrome",
+    notAttempted: {
+        label: "Not Attempted",
         color: "var(--chart-1)",
     },
-    safari: {
-        label: "Safari",
+    wrongAnswers: {
+        label: "Wrong Answers",
         color: "var(--chart-2)",
     },
-    firefox: {
-        label: "Firefox",
+    correctAnswers: {
+        label: "Correct Answers",
         color: "var(--chart-3)",
-    },
-    edge: {
-        label: "Edge",
-        color: "var(--chart-4)",
-    },
-    other: {
-        label: "Other",
-        color: "var(--chart-5)",
     },
 };
 
-export function PieChartComponent() {
+export function PieChartComponent({
+    correctAnswers,
+    wrongAnswers,
+    notAttempted,
+}) {
+    const chartData = [
+        { label: "notAttempted", value: notAttempted, fill: "var(--chart-1)" },
+        { label: "wrongAnswers", value: wrongAnswers, fill: "var(--chart-2)" },
+        { label: "correctAnswers", value: correctAnswers, fill: "var(--chart-3)" },
+    ];
+
     return (
         <Card className="flex flex-col bg-transparent">
             <CardContent className="flex-1 pb-0">
@@ -51,9 +42,9 @@ export function PieChartComponent() {
                     className="mx-auto aspect-square max-h-[300px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
                 >
                     <PieChart>
-                        <Pie data={chartData} dataKey="visitors" label nameKey="browser" />
+                        <Pie data={chartData} dataKey="value" label nameKey="label" />
                         <ChartLegend
-                            content={<ChartLegendContent nameKey="browser" />}
+                            content={<ChartLegendContent nameKey="label" />}
                             className="translate-y-1 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center text-white"
                         />
                     </PieChart>

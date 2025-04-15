@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
@@ -18,11 +18,21 @@ const QuizPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userAnswers, setUserAnswers] = useState({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const audioRef = useRef(new Audio(notificationTone));
+  const [sendingData, setSendingData] = useState(false);
+  const [quizStartTime, setQuizStartTime] = useState(null); // Track when quiz actually starts
+  const audioRef = useRef(null);
   const timerRef = useRef(null);
-  const quizStartTime = new Date().toISOString(); // Store this when quiz begins
 
+  // Initialize audio only once
+  useEffect(() => {
+    audioRef.current = new Audio(notificationTone);
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   // Fetch questions from backend
   useEffect(() => {
@@ -33,6 +43,7 @@ const QuizPage = () => {
         );
         setQuestions(response.data);
         setLoading(false);
+        setQuizStartTime(new Date()); // Set start time when questions are loaded
       } catch (err) {
         setError(err.message);
         setLoading(false);
@@ -43,6 +54,13 @@ const QuizPage = () => {
     fetchQuestions();
   }, [topic]);
 
+  // Calculate time taken when quiz ends
+  const calculateTimeTaken = () => {
+    if (!quizStartTime) return 0;
+    const endTime = new Date();
+    return Math.floor((endTime - quizStartTime) / 1000); // Return time in seconds
+  };
+
   // Update selected option when question changes
   useEffect(() => {
     const currentQuestionId = questions[currentQuestionIndex]?.id;
@@ -50,14 +68,15 @@ const QuizPage = () => {
   }, [currentQuestionIndex, questions, userAnswers]);
 
   const playAudio = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.play().catch((error) => console.error("Error playing sound:", error));
+    if (audioRef.current) {
+      audioRef.current.play().catch((error) => console.error("Error playing sound:", error));
     }
   }, []);
 
   // Timer logic
   useEffect(() => {
+    if (!quizStartTime) return; // Don't start timer until questions are loaded
+
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime.seconds > 0) {
@@ -70,15 +89,14 @@ const QuizPage = () => {
           }
           return { minutes: prevTime.minutes - 1, seconds: 59 };
         }
-
         clearInterval(timerRef.current);
-        handleSubmitQuiz();
+        setTimeUp(true);
         return { minutes: 0, seconds: 0 };
       });
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [playAudio]);
+  }, [playAudio, quizStartTime]);
 
   // Handle option selection
   const handleOptionSelect = (option) => {
@@ -90,7 +108,7 @@ const QuizPage = () => {
     }));
   };
 
-  // Fullscreen logic (keep existing)
+  // Fullscreen logic
   useEffect(() => {
     const enterFullScreen = () => {
       const doc = document.documentElement;
@@ -110,10 +128,19 @@ const QuizPage = () => {
     enterFullScreen();
     document.addEventListener("fullscreenchange", handleFullScreenChange);
 
-    return () => document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
   }, []);
 
-  // Security restrictions (keep existing)
+  // Exit fullscreen when time's up
+  useEffect(() => {
+    if (timeUp && document.fullscreenElement) {
+      document.exitFullscreen().catch(err => console.error("Error exiting fullscreen:", err));
+    }
+  }, [timeUp]);
+
+  // Security restrictions
   useEffect(() => {
     const handleRestrictedKeys = (event) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.key === "F5" || event.keyCode === 123) {
@@ -127,27 +154,19 @@ const QuizPage = () => {
       toast.error("You cannot go back during the quiz!", { icon: "🚫" });
     };
 
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = "You cannot refresh during the quiz!";
-      toast.error("Page refresh is disabled during the quiz!", { icon: "🚫" });
-    };
-
     window.history.pushState(null, null, window.location.href);
     document.addEventListener("keydown", handleRestrictedKeys);
     window.addEventListener("popstate", handleBack);
-    window.addEventListener("beforeunload", handleBeforeUnload);
     document.addEventListener("contextmenu", (event) => event.preventDefault());
 
     return () => {
       document.removeEventListener("keydown", handleRestrictedKeys);
       window.removeEventListener("popstate", handleBack);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
       document.removeEventListener("contextmenu", (event) => event.preventDefault());
     };
   }, []);
 
-  // Tab visibility (keep existing)
+  // Tab visibility
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -166,7 +185,7 @@ const QuizPage = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      handleSubmitQuiz();
+      setTimeUp(true);
     }
   };
 
@@ -176,42 +195,42 @@ const QuizPage = () => {
     }
   };
 
-  // Submit quiz and calculate results
-  const handleSubmitQuiz = () => {
-    setTimeUp(true);
-    clearInterval(timerRef.current);
-    setQuizSubmitted(true);
+  // Calculate results and navigate when timeUp changes
+  useEffect(() => {
+    if (timeUp) {
+      const calculateAndSendResults = async () => {
+        setSendingData(true);
+        
+        const results = questions.map(question => {
+          const userAnswer = userAnswers[question.id];
+          return {
+            ...question,
+            userAnswer,
+            isCorrect: userAnswer === question.answer
+          };
+        });
 
-    // Calculate results
-    const results = questions.map(question => {
-      const userAnswer = userAnswers[question.id];
-      const isCorrect = userAnswer === question.answer;
-      
-      return {
-        ...question,
-        userAnswer,
-        isCorrect
+        const correctAnswers = results.filter(r => r.isCorrect).length;
+        const timeTaken = calculateTimeTaken(); // Calculate time taken in seconds
+
+        const quizData = {
+          topic,
+          totalQuestions: questions.length,
+          correctAnswers,
+          results,
+          timeTaken,
+        };
+
+        // Here you can add code to send data to backend if needed
+        // await axios.post('/api/save-results', quizData);
+        console.log("Quiz Data:", quizData);
+        navigate('/quiz-results', { state: quizData });
       };
-    });
 
-    const correctAnswers = results.filter(r => r.isCorrect).length;
-    const score = Math.round((correctAnswers / questions.length) * 100);
+      calculateAndSendResults();
+    }
+  }, [timeUp, questions, userAnswers, topic, navigate]);
 
-    // Prepare data for results page
-    const quizData = {
-      topic,
-      score,
-      totalQuestions: questions.length,
-      correctAnswers,
-      results,
-      timestamp: quizStartTime
-    };
-
-    // Navigate to results page with data
-    navigate('/quiz-results', { state: quizData });
-  };
-
-  // Format topic for display
   const formatTopic = (str) => {
     return str
       .split('_')
@@ -307,15 +326,12 @@ const QuizPage = () => {
             <div className="flex flex-col items-center gap-16 my-8">
               <h2>
                 <p className="text-3xl text-center text-fuchsia-400 font-semibold mb-2.5">
-                  {quizSubmitted ? "Quiz Submitted!" : "Time's Up!"}
+                  {timeUp ? "Quiz Submitted!" : "Time's Up!"}
                 </p>
                 <p className="text-2xl text-center text-fuchsia-200 font-medium">
-                  You've completed the quiz. Let's see your results!
+                  {sendingData ? "Processing your results..." : "Redirecting to results..."}
                 </p>
               </h2>
-              <Link to="/quiz-results">
-                <GradientBtn name="View Results" />
-              </Link>
             </div>
           )}
         </div>
