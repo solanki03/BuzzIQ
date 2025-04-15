@@ -51,17 +51,56 @@ const createCollectionName = (username) => {
 
 
 // Save quiz results endpoint
+// Add this model definition right after your resultsDB connection
+const resultSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  username: { type: String, required: true },
+  topic: { type: String, required: true },
+  totalQuestions: { type: Number, required: true },
+  correctAnswers: { type: Number, required: true },
+  wrongAnswers: { type: Number, required: true },
+  notAttempted: { type: Number, required: true },
+  timeTaken: { type: Number, required: true }, // in seconds
+  details: { type: Array, default: [] },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// Cache for models to avoid recompiling
+const modelCache = {};
+
+// Function to get or create a model for a user's results
+function getResultModel(username) {
+  const collectionName = `results_${createCollectionName(username)}`;
+  
+  if (modelCache[collectionName]) {
+    return modelCache[collectionName];
+  }
+
+  const Model = resultsDB.model(collectionName, resultSchema);
+  modelCache[collectionName] = Model;
+  
+  return Model;
+}
+
+// Update your POST endpoint like this:
 app.post('/v1/results', async (req, res) => {
   try {
-    const { userId, username, ...resultData } = req.body;
+    const { userId, username, topic, totalQuestions, correctAnswers, wrongAnswers, notAttempted, timeTaken, details } = req.body;
 
     // Validate required fields
-    if (!userId || !username) {
+    if (!userId || !username || !topic || totalQuestions === undefined || 
+        correctAnswers === undefined || timeTaken === undefined) {
       return res.status(400).json({
         success: false,
-        error: 'User ID and username are required'
+        error: 'Missing required fields'
       });
     }
+
+    // Calculate derived fields if not provided
+    const calculatedNotAttempted = notAttempted !== undefined ? notAttempted : 
+                                 (totalQuestions - correctAnswers - (wrongAnswers || 0));
+    const calculatedWrongAnswers = wrongAnswers !== undefined ? wrongAnswers : 
+                                 (totalQuestions - correctAnswers - calculatedNotAttempted);
 
     // Create or get model for this user's results
     const Result = getResultModel(username);
@@ -70,11 +109,22 @@ app.post('/v1/results', async (req, res) => {
     const result = new Result({
       userId,
       username,
-      ...resultData,
-      // Ensure all required fields are present
-      notAttempted: resultData.notAttempted || 0,
-      wrongAnswers: resultData.wrongAnswers || (resultData.totalQuestions - resultData.correctAnswers)
+      topic,
+      totalQuestions,
+      correctAnswers,
+      wrongAnswers: calculatedWrongAnswers,
+      notAttempted: calculatedNotAttempted,
+      timeTaken,
+      details: details || []
     });
+
+    // Validate the data sums
+    if (result.correctAnswers + result.wrongAnswers + result.notAttempted !== result.totalQuestions) {
+      return res.status(400).json({
+        success: false,
+        error: 'Answer counts do not sum to total questions'
+      });
+    }
 
     // Save to database
     await result.save();
@@ -83,17 +133,29 @@ app.post('/v1/results', async (req, res) => {
       success: true,
       data: {
         collection: `results_${createCollectionName(username)}`,
-        result: result
+        result: result.toObject()
       }
     });
 
   } catch (err) {
     console.error('Error saving results:', err);
-    res.status(500).json({
+    
+    const errorResponse = {
       success: false,
-      error: 'Failed to save results',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
+      error: 'Failed to save results'
+    };
+
+    if (err.name === 'ValidationError') {
+      errorResponse.error = 'Validation failed';
+      errorResponse.details = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json(errorResponse);
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      errorResponse.details = err.message;
+    }
+
+    res.status(500).json(errorResponse);
   }
 });
 

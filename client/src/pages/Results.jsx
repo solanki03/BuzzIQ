@@ -18,9 +18,10 @@ const Results = () => {
   const [hasSaved, setHasSaved] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const saveAttempts = useRef(0);
-  const maxAttempts = 3; // Maximum number of save attempts
-  const retryDelay = 5000; // 5 seconds delay between attempts
-  
+  const maxAttempts = 3;
+  const retryDelay = 5000;
+  const toastId = useRef(null);
+
   // Safely extract quiz results with proper defaults
   const quizData = location.state || {};
   const {
@@ -30,23 +31,21 @@ const Results = () => {
     timeTaken = 0,
   } = quizData;
 
-  // Calculate actual metrics from results array
+  // Calculate metrics
   const correctAnswers = results.filter(q => q.isCorrect).length;
   const attemptedQuestions = results.filter(q => q.userAnswer !== undefined && q.userAnswer !== null).length;
   const wrongAnswers = results.filter(q => q.userAnswer && !q.isCorrect).length;
   const notAttempted = totalQuestions - attemptedQuestions;
 
-  // Format time taken from seconds to minutes and seconds
+  // Format time taken
   const formatTimeTaken = (seconds) => {
-    if (typeof seconds !== 'number' || seconds < 0) {
-      return '0 min 0 sec';
-    }
+    if (typeof seconds !== 'number' || seconds < 0) return '0 min 0 sec';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes} min ${remainingSeconds} sec`;
   };
 
-  // Format topic name with proper capitalization
+  // Format topic name
   const formatTopicName = (str) => {
     if (!str) return 'Quiz Results';
     return str
@@ -57,7 +56,7 @@ const Results = () => {
 
   const formattedTopic = formatTopicName(topic);
 
-  // Build result info display
+  // Result info display
   const resultInfo = [
     { label: 'Topic', value: formattedTopic },
     { label: 'Total Questions', value: totalQuestions },
@@ -68,18 +67,21 @@ const Results = () => {
     { label: 'Time Taken', value: formatTimeTaken(timeTaken) },
   ];
 
-  // Filter only wrong answers for analysis (user answered but was incorrect)
+  // Wrong answers list
   const wrongAnswersList = results.filter(question => 
     question.userAnswer && question.userAnswer !== question.answer
   );
 
-  // Save results to backend with retry logic
+  // Save results with retry logic
   const saveResults = useCallback(async () => {
     if (!user || !topic || hasSaved || isSaving || saveAttempts.current >= maxAttempts) return;
 
     setIsSaving(true);
     setSaveError(null);
     const currentAttempt = saveAttempts.current + 1;
+
+    // Clear any existing toasts
+    toast.dismiss(toastId.current);
 
     try {
       const payload = {
@@ -93,34 +95,35 @@ const Results = () => {
         timeTaken
       };
 
-      console.log(payload)
-      toast.loading(`Saving results (attempt ${currentAttempt} of ${maxAttempts})...`);
+      toastId.current = toast.loading(`Saving results (attempt ${currentAttempt} of ${maxAttempts})...`);
+      
       const response = await axios.post('http://localhost:5000/v1/results', payload);
       if (!response.data.success) {
         throw new Error(response.data.error || 'Failed to save results');
       }
 
-      // Success case
-      toast.dismiss();
+      toast.dismiss(toastId.current);
       toast.success('Results saved successfully!');
       setHasSaved(true);
     } catch (err) {
       saveAttempts.current += 1;
       const errorMessage = err.response?.data?.error || err.message;
       setSaveError(errorMessage);
-      console.error('Error saving results:', err);
-      toast.dismiss();
+      
+      toast.dismiss(toastId.current);
 
       if (saveAttempts.current < maxAttempts) {
-        toast.error(`Failed to save (attempt ${saveAttempts.current} of ${maxAttempts}). Retrying in 5 seconds...`);
-        // Retry after delay if we haven't reached max attempts
+        toastId.current = toast.error(
+          `Failed to save (attempt ${saveAttempts.current} of ${maxAttempts}). Retrying...`,
+          { duration: retryDelay }
+        );
+        
         const retryTimer = setTimeout(() => {
           saveResults();
         }, retryDelay);
         
         return () => clearTimeout(retryTimer);
       } else {
-        // Final failure
         toast.error('Failed to save results after multiple attempts. Please try again later.');
       }
     } finally {
@@ -128,9 +131,12 @@ const Results = () => {
     }
   }, [user, topic, totalQuestions, correctAnswers, results, timeTaken, formattedTopic, isSaving, hasSaved]);
 
+  // Auto-save on mount
   useEffect(() => {
-    saveResults();
-  }, [saveResults]);
+    if (!hasSaved && !isSaving) {
+      saveResults();
+    }
+  }, [hasSaved, isSaving, saveResults]);
 
   // Prevent going back to QuizPage
   useEffect(() => {
@@ -144,6 +150,7 @@ const Results = () => {
 
     return () => {
       window.removeEventListener('popstate', handleBackNavigation);
+      toast.dismiss(toastId.current);
     };
   }, [navigate]);
 
@@ -151,18 +158,23 @@ const Results = () => {
   const onButtonClick = useCallback(() => {
     if (!ref.current) return;
 
-    toPng(ref.current, { cacheBust: true })
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = 'quiz-results.png';
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error('Failed to capture image:', err);
-      });
+    toast.promise(
+      toPng(ref.current, { cacheBust: true })
+        .then((dataUrl) => {
+          const link = document.createElement('a');
+          link.download = 'quiz-results.png';
+          link.href = dataUrl;
+          link.click();
+        }),
+      {
+        loading: 'Preparing download...',
+        success: 'Download started!',
+        error: 'Failed to capture image',
+      }
+    );
   }, []);
 
+  // Redirect if no state
   useEffect(() => {
     if (!location.state) {
       navigate('/quiz-dashboard', { replace: true });
@@ -172,7 +184,39 @@ const Results = () => {
   return (
     <div className="w-full text-white mb-10">
       <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
-      <Toaster position="top-center" reverseOrder={false} />
+      
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#1e293b',
+            color: '#fff',
+            border: '1px solid #7e22ce',
+            borderRadius: '0.5rem',
+            padding: '0.75rem 1rem',
+          },
+          success: {
+            iconTheme: {
+              primary: '#a855f7',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+          loading: {
+            iconTheme: {
+              primary: '#a855f7',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
 
       <div ref={ref} className='flex flex-col gap-7 items-center justify-center px-5 bg-black'>
         <h1 className='font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700'>
@@ -197,7 +241,6 @@ const Results = () => {
           </div>
 
           <div className='flex flex-col md:flex-row justify-between gap-6 w-full'>
-
             <div className="flex flex-col gap-4 max-md:min-w-[300px] md:w-1/2">
               <h2 className="text-2xl font-semibold text-center">Quiz Results</h2>
               <div className="space-y-2 bg-slate-700/30 px-5 md:px-7 py-3 rounded-lg">
