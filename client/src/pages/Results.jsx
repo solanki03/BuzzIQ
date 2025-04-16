@@ -36,6 +36,10 @@ const Results = () => {
   const attemptedQuestions = results.filter(q => q.userAnswer !== undefined && q.userAnswer !== null).length;
   const wrongAnswers = results.filter(q => q.userAnswer && !q.isCorrect).length;
   const notAttempted = totalQuestions - attemptedQuestions;
+  const percentage = totalQuestions > 0 ? ((correctAnswers / totalQuestions) * 100).toFixed(2) : 0;
+  // Calculate username
+  const username = user?.username || user?.fullName || user?.primaryEmailAddress?.emailAddress || 'Guest';
+
 
   // Format time taken
   const formatTimeTaken = (seconds) => {
@@ -58,12 +62,14 @@ const Results = () => {
 
   // Result info display
   const resultInfo = [
+    { label: 'Username', value: username },
     { label: 'Topic', value: formattedTopic },
     { label: 'Total Questions', value: totalQuestions },
     { label: 'Attempted Questions', value: attemptedQuestions },
     { label: 'Correct Answers', value: correctAnswers },
     { label: 'Wrong Answers', value: wrongAnswers },
     { label: 'Not Attempted', value: notAttempted },
+    { label: 'Total Score(%)', value: `${percentage}%` },
     { label: 'Time Taken', value: formatTimeTaken(timeTaken) },
   ];
 
@@ -168,7 +174,7 @@ const Results = () => {
         }),
       {
         loading: 'Preparing download...',
-        success: 'Download started!',
+        success: 'Download successful!',
         error: 'Failed to capture image',
       }
     );
