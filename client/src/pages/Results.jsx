@@ -74,7 +74,7 @@ const Results = () => {
   ];
 
   // Wrong answers list
-  const wrongAnswersList = results.filter(question => 
+  const wrongAnswersList = results.filter(question =>
     question.userAnswer && question.userAnswer !== question.answer
   );
 
@@ -102,7 +102,7 @@ const Results = () => {
       };
 
       toastId.current = toast.loading(`Saving results (attempt ${currentAttempt} of ${maxAttempts})...`);
-      
+
       const response = await axios.post('http://localhost:5000/v1/results', payload);
       if (!response.data.success) {
         throw new Error(response.data.error || 'Failed to save results');
@@ -115,7 +115,7 @@ const Results = () => {
       saveAttempts.current += 1;
       const errorMessage = err.response?.data?.error || err.message;
       setSaveError(errorMessage);
-      
+
       toast.dismiss(toastId.current);
 
       if (saveAttempts.current < maxAttempts) {
@@ -123,11 +123,11 @@ const Results = () => {
           `Failed to save (attempt ${saveAttempts.current} of ${maxAttempts}). Retrying...`,
           { duration: retryDelay }
         );
-        
+
         const retryTimer = setTimeout(() => {
           saveResults();
         }, retryDelay);
-        
+
         return () => clearTimeout(retryTimer);
       } else {
         toast.error('Failed to save results after multiple attempts. Please try again later.');
@@ -190,7 +190,7 @@ const Results = () => {
   return (
     <div className="w-full text-white mb-10">
       <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
-      
+
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -253,18 +253,18 @@ const Results = () => {
                 {resultInfo.map((item, index) => (
                   <div key={index} className="flex justify-between text-sm sm:text-lg pb-1.5">
                     <span className="text-gray-300">{item.label}</span>
-                    <span className="text-gray-100 font-medium">{item.value}</span>
+                    <span className="text-gray-100 font-medium text-right">{item.value}</span>
                   </div>
                 ))}
               </div>
-              
+
               <div className="mt-4">
                 <h3 className="text-xl font-semibold mb-3 text-center">Incorrect Answers</h3>
                 {wrongAnswersList.length > 0 ? (
                   <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                     {wrongAnswersList.map((question, index) => (
                       <div key={index} className="bg-slate-800/30 p-3 rounded-lg">
-                        <p className="font-medium text-fuchsia-300">Q{question.id || index + 1}: {question.question}</p>
+                        <p className="font-medium text-fuchsia-300">Q {question.id || index + 1}: {question.question}</p>
                         <p className="mt-1 text-sm text-red-400">
                           Your answer: {question.userAnswer}
                         </p>
@@ -280,8 +280,8 @@ const Results = () => {
 
             <div className="flex flex-col md:w-1/2">
               <h2 className='text-2xl font-semibold text-center'>Performance Overview</h2>
-              <PieChartComponent 
-                correctAnswers={correctAnswers} 
+              <PieChartComponent
+                correctAnswers={correctAnswers}
                 wrongAnswers={wrongAnswers}
                 notAttempted={notAttempted}
               />
@@ -290,9 +290,9 @@ const Results = () => {
 
           <div className='flex flex-row items-center justify-between mt-6'>
             <GradientBtn name="Dashboard" onClick={() => navigate('/quiz-dashboard')} />
-            <GradientBtn 
-              name="Retake Quiz" 
-              onClick={() => navigate(`/quiz/${topic || 'computer_fundamentals'}`)} 
+            <GradientBtn
+              name="Retake Quiz"
+              onClick={() => navigate(`/quiz/${topic || 'computer_fundamentals'}`)}
             />
           </div>
         </div>
