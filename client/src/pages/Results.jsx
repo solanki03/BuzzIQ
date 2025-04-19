@@ -260,22 +260,33 @@ const Results = () => {
 
               <div className="mt-4">
                 <h3 className="text-xl font-semibold mb-3 text-center">Incorrect Answers</h3>
-                {wrongAnswersList.length > 0 ? (
+                {attemptedQuestions === 0 ? (
+                  <p className="text-center text-gray-400 py-4">
+                    You didn’t attempt any questions.
+                  </p>
+                ) : wrongAnswersList.length > 0 ? (
                   <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                     {wrongAnswersList.map((question, index) => (
                       <div key={index} className="bg-slate-800/30 p-3 rounded-lg">
-                        <p className="font-medium text-fuchsia-300">Q {question.id || index + 1}: {question.question}</p>
+                        <p className="font-medium text-fuchsia-300">
+                          Q {question.id || index + 1}: {question.question}
+                        </p>
                         <p className="mt-1 text-sm text-red-400">
                           Your answer: {question.userAnswer}
                         </p>
-                        <p className="text-sm text-green-400">Correct answer: {question.answer}</p>
+                        <p className="text-sm text-green-400">
+                          Correct answer: {question.answer}
+                        </p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-400 py-4">All answers were correct! Great job!</p>
+                  <p className="text-center text-gray-400 py-4">
+                    All answers were correct! Great job!
+                  </p>
                 )}
               </div>
+
             </div>
 
             <div className="flex flex-col md:w-1/2">
