@@ -3,7 +3,7 @@ import Aurora from "./components/Aurora";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import StartSessionButton from "./components/StartSessionButton";
 import Navbar from "./components/Navbar";
-
+import ChatBot from "./components/Chatbot";
 
 const App = () => {
   const devs = [
@@ -90,6 +90,9 @@ const App = () => {
               </div>
             </div>
           </div>
+   
+       <ChatBot />
+          
 
           {/* Footer */}
 
