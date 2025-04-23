@@ -16,8 +16,8 @@ const Chatbot = () => {
           position: "fixed",
           bottom: "24px",
           right: "24px",
-          width: "60px",
-          height: "60px",
+          width: "40px",
+          height: "40px",
           backgroundColor: "#000",
           borderRadius: "50%",
           boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
@@ -28,11 +28,7 @@ const Chatbot = () => {
           zIndex: 9999,
         }}
       >
-        <img
-          src="https://c7.alamy.com/comp/2M3N8RR/robot-icon-bot-sign-design-chatbot-symbol-concept-voice-support-service-bot-online-support-bot-modern-flat-style-cartoon-character-illustration-2M3N8RR.jpg"
-          alt="Chat"
-          style={{ width: "100px", height: "100px", borderRadius: "100%" }}
-        />
+        <img src="src/assets/images/chat-ai-fill.png" alt="Chatbot Icon" className="h-9" />
       </div>
 
       {/* Chatbox Popup */}
@@ -41,7 +37,7 @@ const Chatbot = () => {
           style={{
             position: "fixed",
             bottom: "90px",
-            right: "24px",
+            right: "20px",
             width: "360px",
             height: "600px",
             backgroundColor: "#fff",
