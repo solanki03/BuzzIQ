@@ -100,12 +100,8 @@ const App = () => {
             <div className="container flex flex-wrap max-sm:justify-between justify-around items-center border-t border-gray-700 py-8">
               {/* Left Section - Branding */}
               <div className="mb-6 md:mb-0">
-                <h2 className="text-2xl md:text-3xl font-Warnes! text-white">
-                  BuzzIQ
-                </h2>
-                <p className="text-gray-400 text-sm sm:text-base">
-                  Get Smart. Get Buzzed.
-                </p>
+                <h2 className="text-2xl md:text-3xl font-Warnes! text-white">BuzzIQ</h2>
+                <p className="text-gray-400 text-sm sm:text-base">Get Smart. Get Buzzed.</p>
                 {/* Social Media Icons */}
                 <div className="mt-3 flex gap-4 text-lg md:text-xl text-gray-400">
                   <a
@@ -116,9 +112,8 @@ const App = () => {
                     <i className="fab fa-github"></i>
                   </a>
                   <a
-                    href="https://www.linkedin.com/in/sourav-pal-659631266
-
-"
+                    href="https://www.linkedin.com/in/sourav-pal-659631266" 
+                    target="_blank"
                     className="hover:text-white transition-colors"
                   >
                     <i className="fab fa-linkedin"></i>
@@ -134,9 +129,7 @@ const App = () => {
 
               {/* Middle Section - Developers */}
               <div className="mb-6 md:mb-0">
-                <h3 className="text-base font-semibold text-white mb-2">
-                  Developed by
-                </h3>
+                <h3 className="text-base font-semibold text-white mb-2">Developed by</h3>
                 <ul className="text-gray-400 text-[12px] md:text-sm space-y-1">
                   {devs.map((dev, index) => (
                     <li key={index}>
@@ -154,9 +147,7 @@ const App = () => {
 
               {/* Right Section - Topics */}
               <div className="text-gray-400">
-                <h3 className="text-base font-semibold text-white mb-2">
-                  Topics
-                </h3>
+                <h3 className="text-base font-semibold text-white mb-2">Topics</h3>
                 <div className="grid grid-cols-3 gap-6 text-[12px] md:text-sm">
                   {[0, 4, 8].map((startIndex) => (
                     <div key={startIndex} className="space-y-1">
