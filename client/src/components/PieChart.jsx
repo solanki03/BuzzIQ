@@ -45,7 +45,7 @@ export function PieChartComponent({
                         <Pie data={chartData} dataKey="value" label nameKey="label" />
                         <ChartLegend
                             content={<ChartLegendContent nameKey="label" />}
-                            className="translate-y-1 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center text-white"
+                            className="translate-y-1 flex-wrap gap-5 [&>*]:basis-1/4 [&>*]:justify-center text-white"
                         />
                     </PieChart>
                 </ChartContainer>

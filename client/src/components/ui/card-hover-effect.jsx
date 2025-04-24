@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion"; // ✅ make sure you're importing from framer-motion
+import { AnimatePresence, motion } from "framer-motion"; 
 import { useState } from "react";
 import QuizButton from "../QuizButton";
 

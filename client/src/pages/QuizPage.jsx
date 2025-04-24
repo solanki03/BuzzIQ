@@ -223,7 +223,7 @@ const QuizPage = () => {
 
         // Here you can add code to send data to backend if needed
         // await axios.post('/api/save-results', quizData);
-        console.log("Quiz Data:", quizData);
+        // console.log("Quiz Data:", quizData);
         navigate('/quiz-results', { state: quizData });
       };
 
