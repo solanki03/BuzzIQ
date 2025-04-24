@@ -8,6 +8,7 @@ import { PieChartComponent } from "@/components/PieChart";
 import { Download, House } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import toast, { Toaster } from "react-hot-toast";
+import QuoteByScore from "@/components/QuoteByScore";
 
 const Results = () => {
   const navigate = useNavigate();
@@ -245,10 +246,7 @@ const Results = () => {
         }}
       />
 
-      <div
-        ref={ref}
-        className="flex flex-col gap-7 items-center justify-center px-5 bg-black"
-      >
+      <div ref={ref} className="flex flex-col gap-7 items-center justify-center px-5 bg-black">
         <h1 className="font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700">
           <span className="text-slate-300">
             Review Your Results & Learn More
@@ -272,6 +270,7 @@ const Results = () => {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between gap-6 w-full">
+            {/* Quiz results section */}
             <div className="flex flex-col gap-4 max-md:min-w-[300px] md:w-1/2">
               <h2 className="text-2xl font-semibold text-center">
                 Quiz Results
@@ -280,7 +279,7 @@ const Results = () => {
                 {resultInfo.map((item, index) => (
                   <div
                     key={index}
-                    className="flex justify-between text-sm sm:text-lg pb-1.5"
+                    className="flex justify-between text-sm sm:text-lg pb-1"
                   >
                     <span className="text-gray-300">{item.label}</span>
                     <span className="text-gray-100 font-medium text-right">
@@ -289,49 +288,62 @@ const Results = () => {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-4">
-                <h3 className="text-xl font-semibold mb-3 text-center">
-                  Incorrect Answers
-                </h3>
-                {attemptedQuestions === 0 ? (
-                  <p className="text-center text-gray-400 py-4">
-                    You didn&apos;t attempt any questions.
-                  </p>
-                ) : wrongAnswersList.length > 0 ? (
-                  <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
-                    {wrongAnswersList.map((question, index) => (
-                      <div
-                        key={index}
-                        className="bg-slate-800/30 p-3 rounded-lg"
-                      >
-                        <p className="font-medium text-fuchsia-300">
-                          Q {question.id || index + 1}: {question.question}
-                        </p>
-                        <p className="mt-1 text-sm text-red-400">
-                          Your answer: {question.userAnswer}
-                        </p>
-                        <p className="text-sm text-green-400">
-                          Correct answer: {question.answer}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-center text-gray-400 py-4">
-                    All answers were correct! Great job!
-                  </p>
-                )}
-              </div>
             </div>
 
+            {/* Pie chart section */}
             <div className="flex flex-col md:w-1/2">
-              <h2 className="text-2xl font-semibold mb-4 text-center">
+              <h2 className="text-2xl font-semibold mb-1 text-center">
                 Performance Overview
               </h2>
               <PieChartComponent
                 {...{ correctAnswers, wrongAnswers, notAttempted }}
               />
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between gap-6 w-full mt-5">
+            {/* Incorrect answers card */}
+            <div className="max-md:min-w-[300px] md:w-1/2">
+              <h3 className="text-xl font-semibold mb-3 text-center">
+                Incorrect Answers
+              </h3>
+              {attemptedQuestions === 0 ? (
+                <div className="bg-slate-700/30 p-3 rounded-lg">
+                  <p className="text-center text-sm md:text-base text-gray-400 py-4">
+                    You didn&apos;t attempt any questions.
+                  </p>
+                </div>
+              ) : wrongAnswersList.length > 0 ? (
+                <div className="space-y-4 max-h-40 overflow-y-auto pr-2">
+                  {wrongAnswersList.map((question, index) => (
+                    <div
+                      key={index}
+                      className="bg-slate-700/30 p-3 rounded-lg"
+                    >
+                      <p className="font-medium text-fuchsia-300">
+                        Q {question.id || index + 1}: {question.question}
+                      </p>
+                      <p className="mt-1 text-sm text-red-400">
+                        Your answer: {question.userAnswer}
+                      </p>
+                      <p className="text-sm text-green-400">
+                        Correct answer: {question.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-slate-700/30 p-3 rounded-lg">
+                  <p className="text-center text-sm md:text-base text-gray-400 py-4">
+                    All answers were correct! Great job!
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Quotes depending on results */}
+            <div className="max-md:min-w-[300px] md:w-1/2 max-sm:mt-2">
+              <QuoteByScore percentage={percentage} />
             </div>
           </div>
 

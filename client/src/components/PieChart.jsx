@@ -55,7 +55,7 @@ export function PieChartComponent({ correctAnswers, wrongAnswers, notAttempted }
   };
 
   return (
-    <Card className="bg-slate-700/30 shadow-lg rounded-lg overflow-hidden py-0">
+    <Card className="bg-slate-700/30 shadow-lg rounded-lg overflow-hidden py-0 h-full">
       <CardContent className="p-6 flex flex-col items-center space-y-6">
         <div className="w-48 h-48 mt-5 mb-12">
           <Pie ref={chartRef} data={data} options={options} />

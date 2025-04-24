@@ -310,11 +310,7 @@ const QuizPage = () => {
               </div>
 
               <div className="flex items-center justify-between mt-4">
-                <GradientBtn 
-                  name="Prev" 
-                  onClick={handlePrev}
-                  disabled={currentQuestionIndex === 0}
-                />
+                <GradientBtn name="Prev" onClick={handlePrev} disabled={currentQuestionIndex === 0} />
                 <GradientBtn 
                   name={currentQuestionIndex === questions.length - 1 ? "Submit" : "Next"} 
                   onClick={handleNext}
