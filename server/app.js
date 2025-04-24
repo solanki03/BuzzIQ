@@ -60,10 +60,8 @@ const resultSchema = new mongoose.Schema({
   correctAnswers: { type: Number, required: true },
   wrongAnswers: { type: Number, required: true },
   notAttempted: { type: Number, required: true },
-  timeTaken: { type: Number, required: true }, // in seconds
-  details: { type: Array, default: [] },
-  createdAt: { type: Date, default: Date.now }
-});
+  timeTaken: { type: Number, required: true },
+}, {timestamps: true});
 
 // Cache for models to avoid recompiling
 const modelCache = {};
@@ -85,7 +83,7 @@ function getResultModel(username) {
 // Update your POST endpoint like this:
 app.post('/v1/results', async (req, res) => {
   try {
-    const { userId, username, topic, totalQuestions, correctAnswers, wrongAnswers, notAttempted, timeTaken, details } = req.body;
+    const { userId, username, topic, totalQuestions, correctAnswers, wrongAnswers, notAttempted, timeTaken } = req.body;
 
     // Validate required fields
     if (!userId || !username || !topic || totalQuestions === undefined || 
@@ -114,8 +112,7 @@ app.post('/v1/results', async (req, res) => {
       correctAnswers,
       wrongAnswers: calculatedWrongAnswers,
       notAttempted: calculatedNotAttempted,
-      timeTaken,
-      details: details || []
+      timeTaken
     });
 
     // Validate the data sums
@@ -136,6 +133,8 @@ app.post('/v1/results', async (req, res) => {
         result: result.toObject()
       }
     });
+
+    console.log('Result saved:', result);
 
   } catch (err) {
     console.error('Error saving results:', err);

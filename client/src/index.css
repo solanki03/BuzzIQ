@@ -12,14 +12,11 @@
 body {
   background-color: black;
   color:azure;
+  font-family: var(--font-Poppins);
 }
 
 body::-webkit-scrollbar {
   display: none;
-}
-
-h1, h2, h3, h4, h5, h6, label, thead {
-  font-family: var(--font-Poppins);
 }
 
 p, a, span, td, input {
@@ -160,7 +157,4 @@ p, a, span, td, input {
   
 button, a{
   cursor: pointer;
-}
---webket-scrollbar{
-  width: 0px;
 }
