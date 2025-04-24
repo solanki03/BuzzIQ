@@ -336,23 +336,16 @@ const Results = () => {
           </div>
 
           <div className="flex flex-row items-center justify-between mt-6">
-            <GradientBtn
-              name="Dashboard"
-              onClick={() => navigate("/quiz-dashboard")}
-            />
-            <GradientBtn
-              name="Retake Quiz"
-              onClick={() =>
-                navigate(`/quiz/${topic || "computer_fundamentals"}`)
-              }
-            />
+            <GradientBtn name="Dashboard" onClick={() => navigate("/quiz-dashboard")} />
+            <GradientBtn name="Retake Quiz"
+              onClick={() => navigate(`/quiz/${topic || "computer_fundamentals"}`)} />
           </div>
         </div>
 
         <div className="w-full flex justify-center text-center">
-          <div className="">
+          <div className="flex gap-0.5 items-center">
+            <img src="src/assets/images/BuzzIQ_logo.png" alt="BuzzIQ logo" className="h-[12px]" />
             <p className="text-sm text-gray-400">
-              <span className="font-Warnes! font-medium!">BuzzIQ </span>
               &copy; {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

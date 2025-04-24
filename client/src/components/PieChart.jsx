@@ -55,23 +55,23 @@ export function PieChartComponent({ correctAnswers, wrongAnswers, notAttempted }
   };
 
   return (
-    <Card className="bg-slate-800 shadow-lg rounded-xl overflow-hidden py-0">
-      <CardContent className="p-6 bg-slate-900 flex flex-col items-center space-y-6">
-        <div className="w-48 h-48">
+    <Card className="bg-slate-700/30 shadow-lg rounded-lg overflow-hidden py-0">
+      <CardContent className="p-6 flex flex-col items-center space-y-6">
+        <div className="w-48 h-48 mt-5 mb-12">
           <Pie ref={chartRef} data={data} options={options} />
         </div>
-        <div className="w-full grid grid-cols-3 gap-4">
+        <div className="w-full grid grid-cols-3 gap-5">
           {Object.entries(chartConfig).map(([key, cfg]) => {
             const val = { notAttempted, wrongAnswers, correctAnswers }[key];
             const pct = total ? ((val / total) * 100).toFixed(1) : 0;
             return (
-              <div key={key} className="flex flex-col items-center">
+              <div key={key} className="flex flex-col items-center mb-5">
                 <span
                   className="w-4 h-4 rounded-full mb-1"
                   style={{ backgroundColor: cfg.color }}
                 />
-                <p className="text-white font-medium text-nowrap">{cfg.label}</p>
-                <p className="text-gray-400 text-sm text-nowrap">{val} ({pct}%)</p>
+                <p className="text-white text-center text-xs md:text-sm font-medium">{cfg.label}</p>
+                <p className="text-gray-400 text-xs md:text-sm text-nowrap">{val} ({pct}%)</p>
               </div>
             );
           })}
