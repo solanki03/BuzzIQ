@@ -6,11 +6,12 @@ import Navbar from "@/components/Navbar";
 import GradientBtn from "@/components/GradientBtn";
 import stopwatch from "@/assets/images/stopwatch.png";
 import notificationTone from "@/assets/audio/notification_tone.mp3";
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 
 const QuizPage = () => {
   const { topic } = useParams();
   const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ minutes: 10, seconds: 0 });
   const [timeUp, setTimeUp] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -36,23 +37,34 @@ const QuizPage = () => {
 
   // Fetch questions from backend
   useEffect(() => {
+    let timeoutId;
+  
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/v1/questions/${topic}`
-        );
-        setQuestions(response.data);
-        setLoading(false);
-        setQuizStartTime(new Date()); // Set start time when questions are loaded
+        const response = await axios.get(`http://localhost:5000/v1/questions/${topic}`);
+        const shuffled = [...response.data];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        setQuestions(shuffled);
+        setQuizStartTime(new Date());
+  
+        timeoutId = setTimeout(() => {
+          setLoading(false);
+        }, 500);
       } catch (err) {
         setError(err.message);
         setLoading(false);
         toast.error("Failed to load questions");
       }
     };
-
+  
     fetchQuestions();
+  
+    return () => clearTimeout(timeoutId); // Cleanup on unmount or topic change
   }, [topic]);
+  
 
   // Calculate time taken when quiz ends
   const calculateTimeTaken = () => {
@@ -61,11 +73,6 @@ const QuizPage = () => {
     return Math.floor((endTime - quizStartTime) / 1000); // Return time in seconds
   };
 
-  // Update selected option when question changes
-  useEffect(() => {
-    const currentQuestionId = questions[currentQuestionIndex]?.id;
-    setSelectedOption(userAnswers[currentQuestionId] || null);
-  }, [currentQuestionIndex, questions, userAnswers]);
 
   const playAudio = useCallback(() => {
     if (audioRef.current) {
@@ -101,7 +108,6 @@ const QuizPage = () => {
   // Handle option selection
   const handleOptionSelect = (option) => {
     const currentQuestionId = questions[currentQuestionIndex].id;
-    setSelectedOption(option);
     setUserAnswers(prev => ({
       ...prev,
       [currentQuestionId]: option
@@ -238,7 +244,7 @@ const QuizPage = () => {
       .join(' ');
   };
 
-  if (loading) return <div className="text-center py-20">Loading questions...</div>;
+  if (loading) return <div className="text-center py-20">{QuizSkeleton()}</div>;
   if (error) return <div className="text-center py-20 text-red-500">Error: {error}</div>;
   if (questions.length === 0) return <div className="text-center py-20">No questions found</div>;
 
@@ -337,3 +343,48 @@ const QuizPage = () => {
 };
 
 export default QuizPage;
+
+
+function QuizSkeleton() {
+  return (
+    <div className="flex flex-col gap-9 items-center justify-center py-10">
+      {/* Title Skeleton */}
+      <Skeleton className="h-10 w-2/3 sm:w-1/2 rounded-md opacity-60" />
+
+      <Card className="bg-slate-700/20 shadow-md rounded-lg overflow-hidden py-9 w-full max-w-5/6 lg:max-w-4/6">
+        <CardContent className="px-6 py-9 flex flex-col space-y-9 relative">
+          {/* Timer & Stats */}
+          <div className="absolute right-8 top-5 flex items-center justify-end gap-2 text-sm opacity-60">
+            <Skeleton className="h-6 w-6 rounded-full" />
+            <Skeleton className="h-6 w-12 rounded-lg" />
+            <Skeleton className="h-6 w-20 ml-4 rounded-lg" />
+          </div>
+
+          {/* Question Block */}
+          <div className="flex flex-col gap-8 mt-5">
+            <Skeleton className="h-8 w-1/2 md:w-1/3 rounded-md opacity-60" />
+
+            {/* Options Skeletons */}
+            <div className="flex flex-col gap-1">
+              {[...Array(4)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 md:text-lg px-3 py-2 rounded-lg bg-slate-800"
+                >
+                  <Skeleton className="h-4 w-4 rounded-full opacity-60" />
+                  <Skeleton className="h-4 w-5/6 rounded-lg opacity-60" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="flex items-center justify-between mt-4">
+            <Skeleton className="h-10 w-24 rounded-full opacity-60" />
+            <Skeleton className="h-10 w-24 rounded-full opacity-60" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
