@@ -275,7 +275,7 @@ const Results = () => {
               <h2 className="text-2xl font-semibold text-center">
                 Quiz Results
               </h2>
-              <div className="space-y-2 bg-slate-700/30 px-5 md:px-7 py-3 rounded-lg">
+              <div className="bg-slate-700/30 px-5 md:px-7 h-full rounded-lg flex flex-col justify-center gap-y-2">
                 {resultInfo.map((item, index) => (
                   <div
                     key={index}
@@ -291,8 +291,8 @@ const Results = () => {
             </div>
 
             {/* Pie chart section */}
-            <div className="flex flex-col md:w-1/2">
-              <h2 className="text-2xl font-semibold mb-1 text-center">
+            <div className="flex flex-col md:w-1/2 gap-4">
+              <h2 className="text-2xl font-semibold text-center">
                 Performance Overview
               </h2>
               <PieChartComponent
