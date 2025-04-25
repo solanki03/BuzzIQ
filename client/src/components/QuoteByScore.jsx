@@ -3,7 +3,7 @@ import React from 'react'
 const QuoteByScore = ({ percentage }) => {
     let title = "", message = "", emoji = "";
 
-    if (percentage >= 80) {
+    if (percentage >= 85) {
         title = "🌟 Excellent Work!";
         message = "You nailed it! Keep up the great momentum. 🚀";
     } else if (percentage >= 50) {
