@@ -8,6 +8,7 @@ import stopwatch from "@/assets/images/stopwatch.png";
 import notificationTone from "@/assets/audio/notification_tone.mp3";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import { stopCamera } from "@/utils/stopCamera";
 
 const QuizPage = () => {
   const { topic } = useParams();
@@ -34,6 +35,13 @@ const QuizPage = () => {
       }
     };
   }, []);
+
+  // Stop camera when component unmounts
+  useEffect(() => {
+    if(timeUp){
+      stopCamera();
+    }
+  }, [timeUp]);
 
   // Fetch questions from backend
   useEffect(() => {

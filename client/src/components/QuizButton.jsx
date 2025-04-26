@@ -21,6 +21,7 @@ const QuizButton = ({ name, topic }) => {
     const { isSignedIn } = useUser();
 
     const navigate = useNavigate();
+    let videoStream;
 
 
     // Convert topic to URL-friendly format
@@ -37,8 +38,9 @@ const QuizButton = ({ name, topic }) => {
             return;
         };
         try {
-            await navigator.mediaDevices.getUserMedia({ video: true });
-            navigate(getQuizPath());
+           const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+           window.videoStream = stream; //save it in a variable to stop it later
+           navigate(getQuizPath());
             
         } catch (error) {
             alert("Please allow camera access to start the quiz.");
