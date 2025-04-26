@@ -61,9 +61,10 @@ const App = () => {
           </h2>
           <p className="mt-8 text-sm text-gray-400 sm:text-base md:w-1/2">
             Dive into a world of diverse quizzes, from tech to trivia.
-            Challenge your mind, discover your strengths, and see how you
-            rank. Your brain’s test adventure starts from here 🚀
+            Challenge your mind, discover your strengths, earn BUZZIQ certificates and showcase your achievements. 
+            Take your first quiz and start your journey to sucess today! 🚀
           </p>
+         
 
           <div className="mt-6 flex items-center">
             <img
@@ -165,7 +166,7 @@ const App = () => {
           <div className="border-t border-gray-700 w-86 mb-5 pt-2">
             <p className="text-sm text-gray-400">
               <span className="font-Warnes! font-medium!">BuzzIQ{" "}</span>
-              &copy; {new Date().getFullYear()} All Rights Reserved
+              &copy; {new Date().getFullYear()} All Rights Are Reserved.
             </p>
           </div>
         </div>

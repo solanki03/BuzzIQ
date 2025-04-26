@@ -1,51 +1,32 @@
 import React, { useState } from "react";
+import chatIcon from "../assets/images/chat-ai-fill.png"; 
+import closeIcon from "../assets/images/closeIcon.png"; 
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   return (
     <>
-      {/* Floating Button */}
-      <div
+      {/* Floating Toggle Button */}
+      <button
         onClick={toggleChat}
-        style={{
-          position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          width: "40px",
-          height: "40px",
-          backgroundColor: "#000",
-          borderRadius: "50%",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          zIndex: 9999,
-        }}
+        className="fixed bottom-6 right-6 w-12 h-12 bg-black rounded-full shadow-lg flex items-center justify-center z-[9999] cursor-pointer transition-transform transform hover:scale-110"
       >
-        <img src="src/assets/images/chat-ai-fill.png" alt="Chatbot Icon" className="h-9" />
-      </div>
+        <img 
+          src={isOpen ? closeIcon : chatIcon} 
+          alt="Chatbot Toggle Icon" 
+          className="h-10 w-10" 
+        />
+      </button>
 
       {/* Chatbox Popup */}
       {isOpen && (
         <div
-          style={{
-            position: "fixed",
-            bottom: "90px",
-            right: "20px",
-            width: "360px",
-            height: "600px",
-            backgroundColor: "#fff",
-            borderRadius: "12px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
-            overflow: "hidden",
-            zIndex: 9998,
-          }}
+          className="fixed bottom-24 right-5 w-80 h-[600px] bg-white rounded-xl shadow-2xl overflow-hidden z-[9998]"
         >
           <iframe
             src="https://www.chatbase.co/chatbot-iframe/m6oOAmxpSuFs-JVdm72G0"
