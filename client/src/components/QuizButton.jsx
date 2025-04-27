@@ -80,13 +80,12 @@ const QuizButton = ({ name, topic }) => {
                             <span className='inline-block'>1. This quiz contains 15 questions.</span>
                             <span className='inline-block'>2. You have 10 minutes to complete the quiz.</span>
                             <span className='inline-block'>3. The quiz cannot be paused once started.</span>
-                            <span className='inline-block'>4. All questions must be answered.</span>
-                            <span className='inline-block'>5. You must complete the quiz in one session.</span>
-                            <span className='inline-block'>6. Do not resize your browser window during the quiz.</span>
-                            <span className='inline-block'>7. Switching browser tabs will result in automatic submission.</span>
-                            <span className='inline-block'>8. The quiz will auto-submit if you press esc button.</span>
-                            <span className='inline-block'>9. The quiz will auto-submit when the time expires.</span>
-                            <span className='inline-block'>10. You must need to allow camera access to start the quiz.</span>
+                            <span className='inline-block'>4. You must complete the quiz in one session.</span>
+                            <span className='inline-block'>5. Do not resize your browser window during the quiz.</span>
+                            <span className='inline-block'>6. Switching browser tabs will result in automatic submission.</span>
+                            <span className='inline-block'>7. The quiz will auto-submit if you press esc button.</span>
+                            <span className='inline-block'>8. The quiz will auto-submit when the time expires.</span>
+                            <span className='inline-block'>9. You must need to allow camera access to start the quiz.</span>
                         </DialogDescription>
 
                         <DialogFooter className={'flex-col! items-center mt-4'}>
