@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Doughnut } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -35,7 +35,7 @@ export function PieChartComponent({ correctAnswers, wrongAnswers, notAttempted }
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: false, // we’ll render our own legend
       },
       tooltip: {
         backgroundColor: "#1e293b",
@@ -57,15 +57,15 @@ export function PieChartComponent({ correctAnswers, wrongAnswers, notAttempted }
   return (
     <Card className="bg-slate-700/30 shadow-lg rounded-lg overflow-hidden py-0 h-full">
       <CardContent className="p-6 flex flex-col items-center space-y-6">
-        <div className="w-56 h-56 my-5">
-          <Doughnut ref={chartRef} data={data} options={options} />
+        <div className="w-48 h-48 mt-5 mb-8">
+          <Pie ref={chartRef} data={data} options={options} />
         </div>
         <div className="w-full grid grid-cols-3 gap-5">
           {Object.entries(chartConfig).map(([key, cfg]) => {
             const val = { notAttempted, wrongAnswers, correctAnswers }[key];
             const pct = total ? ((val / total) * 100).toFixed(1) : 0;
             return (
-              <div key={key} className="flex flex-col items-center mb-5">
+              <div key={key} className="flex flex-col items-center mb-3">
                 <span
                   className="w-4 h-4 rounded-full mb-1"
                   style={{ backgroundColor: cfg.color }}

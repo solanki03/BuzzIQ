@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import {
@@ -26,22 +25,22 @@ const QuizButton = ({ name, topic }) => {
 
     // Convert topic to URL-friendly format
     const getQuizPath = () => {
-        return topic 
+        return topic
             ? `/quiz/${topic.toLowerCase().replace(/\s+/g, '_')}`
             : "#";
     };
-    
+
     //acess camera permission
-    const handleStartQuiz = async ()=>{
-        if(!isChecked){
+    const handleStartQuiz = async () => {
+        if (!isChecked) {
             alert("Please read all the instructions to start the quiz.")
             return;
         };
         try {
-           const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-           window.videoStream = stream; //save it in a variable to stop it later
-           navigate(getQuizPath());
-            
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            window.videoStream = stream; //save it in a variable to stop it later
+            navigate(getQuizPath());
+
         } catch (error) {
             alert("Please allow camera access to start the quiz.");
             console.error("Error accessing camera:", error);
@@ -83,11 +82,11 @@ const QuizButton = ({ name, topic }) => {
                             <span className='inline-block'>3. The quiz cannot be paused once started.</span>
                             <span className='inline-block'>4. All questions must be answered.</span>
                             <span className='inline-block'>5. You must complete the quiz in one session.</span>
-                            <span className='inline-block'>6. <b>Do not resize your browser </b>window during the quiz.</span>
+                            <span className='inline-block'>6. Do not resize your browser window during the quiz.</span>
                             <span className='inline-block'>7. Switching browser tabs will result in automatic submission.</span>
                             <span className='inline-block'>8. The quiz will auto-submit if you press esc button.</span>
-                            <span className='inline-block'>9. The quiz will <b>auto-submit when the time expires</b>.</span>
-                            <span className='inline-block'>10. You must need to <b>allow camera access</b> to start the quiz.</span>
+                            <span className='inline-block'>9. The quiz will auto-submit when the time expires.</span>
+                            <span className='inline-block'>10. You must need to allow camera access to start the quiz.</span>
                         </DialogDescription>
 
                         <DialogFooter className={'flex-col! items-center mt-4'}>
@@ -114,7 +113,7 @@ const QuizButton = ({ name, topic }) => {
                             <DialogTitle className={'text-fuchsia-400 text-xl text-center mb-2'}>Log In to Start Test</DialogTitle>
                         </DialogHeader>
                         <DialogFooter className={'flex-col! items-center mt-4'}>
-                            <AuthButton afterSignInUrl="/quiz-dashboard" afterSignUpUrl="/quiz-dashboard"/>
+                            <AuthButton afterSignInUrl="/quiz-dashboard" afterSignUpUrl="/quiz-dashboard" />
                         </DialogFooter>
                     </>
                 )}
