@@ -25,7 +25,7 @@ const Chatbot = () => {
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          zIndex: 9999,
+          zIndex: 100,
         }}
       >
         <img src="src/assets/images/chat-ai-fill.png" alt="Chatbot Icon" className="h-9" />

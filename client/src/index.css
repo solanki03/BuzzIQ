@@ -158,3 +158,23 @@ p, a, span, td, input {
 button, a{
   cursor: pointer;
 }
+
+/* Add custom scrollbar styles */
+@layer components {
+  .scrollbar-black::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-black::-webkit-scrollbar-track {
+    background-color:  #09090b;
+  }
+
+  .scrollbar-black::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 4px;
+  }
+
+  .scrollbar-black::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+}

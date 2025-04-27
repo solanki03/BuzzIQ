@@ -187,4 +187,83 @@ app.get('/v1/results/:username', async (req, res) => {
   }
 });
 
+
+// Route 1: User's participation (date + score)
+// Add this endpoint to your backend
+app.get('/v1/chart/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'User ID is required' });
+    }
+
+    // Need to find which collection contains this userId
+    const collections = await resultsDB.db.listCollections().toArray();
+    
+    let chartData = [];
+    
+    // Search through all results_* collections
+    for (const coll of collections) {
+      if (coll.name.startsWith('results_')) {
+        const Model = resultsDB.model(coll.name, resultSchema);
+        const userResults = await Model.find({ userId }, { 
+          createdAt: 1, 
+          correctAnswers: 1, 
+          totalQuestions: 1 
+        }).sort({ createdAt: 1 });
+        
+        if (userResults.length > 0) {
+          chartData = userResults.map(doc => ({
+            date: doc.createdAt,
+            score: ((doc.correctAnswers / doc.totalQuestions) * 100).toFixed(2)
+          }));
+          break; // Found the user's collection
+        }
+      }
+    }
+    
+    res.json({
+      success: true,
+      data: chartData
+    });
+    
+  } catch (err) {
+    console.error('Error fetching chart data by userId:', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch chart data' });
+  }
+});
+
+
+// Route 2: Scores by Topic Name
+app.get('/v1/results/:username/:topicname', async (req, res) => {
+  try {
+    const { username, topicname } = req.params;
+
+    if (!username || !topicname) {
+      return res.status(400).json({ success: false, error: 'Username and topic name are required' });
+    }
+
+    const Result = getResultModel(username);
+
+    // Find all attempts matching the topic
+    const results = await Result.find({ topic: topicname }, { correctAnswers: 1, totalQuestions: 1, createdAt: 1 }).sort({ createdAt: 1 });
+
+    const topicScores = results.map(doc => ({
+      date: doc.createdAt,
+      score: ((doc.correctAnswers / doc.totalQuestions) * 100).toFixed(2)
+    }));
+
+    res.json({
+      success: true,
+      data: topicScores
+    });
+
+  } catch (err) {
+    console.error('Error fetching topic scores:', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch topic scores' });
+  }
+});
+
+
 module.exports = app;

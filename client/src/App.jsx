@@ -62,7 +62,7 @@ const App = () => {
           <p className="mt-8 text-sm text-gray-400 sm:text-base md:w-1/2">
             Dive into a world of diverse quizzes, from tech to trivia.
             Challenge your mind, discover your strengths, and see how you
-            rank. Your brain’s test adventure starts from here 🚀
+            rank. Your brain&apos;s test adventure starts from here 🚀
           </p>
 
           <div className="mt-6 flex items-center">
