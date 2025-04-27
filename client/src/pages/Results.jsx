@@ -154,6 +154,20 @@ const Results = () => {
     saveResults();
   }, []);
 
+  //prevent browser reload and loss of data(ask for confirmation)
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ""; // This is required for Chrome
+      return ""; // This is required for Firefox
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }, []);
+
+
   // Prevent going back to QuizPage
   useEffect(() => {
     const handleBackNavigation = (e) => {
