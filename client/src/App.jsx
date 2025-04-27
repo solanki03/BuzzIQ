@@ -165,7 +165,7 @@ const App = () => {
           <div className="border-t border-gray-700 w-86 mb-5 pt-2">
             <p className="text-sm text-gray-400">
               <span className="font-Warnes! font-medium!">BuzzIQ{" "}</span>
-              &copy; {new Date().getFullYear()} All Rights Reserved
+              &copy; {new Date().getFullYear()} All Rights Are Reserved.
             </p>
           </div>
         </div>

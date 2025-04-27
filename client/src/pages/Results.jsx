@@ -1,19 +1,21 @@
 import React, { useEffect, useCallback, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { toPng } from "html-to-image";
 import axios from "axios";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 import Navbar from "@/components/Navbar";
 import GradientBtn from "@/components/GradientBtn";
 import { PieChartComponent } from "@/components/PieChart";
-import { Download, House } from "lucide-react";
+import { House, Logs } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import toast, { Toaster } from "react-hot-toast";
-import QuoteByScore from "@/components/QuoteByScore";
+import { FeedbackDialog } from "@/components/Feedback";
+import DownloadBtn from "@/components/DownloadBtn";
+import Certificate from "@/components/Certificate";
 
 const Results = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const ref = useRef(null);
   const { user } = useUser();
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
@@ -21,6 +23,7 @@ const Results = () => {
   const maxAttempts = 3;
   const retryDelay = 5000;
   const toastId = useRef(null);
+  const printRef = useRef(null);
 
   // Safely extract quiz results with proper defaults
   const quizData = location.state || {};
@@ -82,11 +85,6 @@ const Results = () => {
     { label: "Total Score(%)", value: `${percentage}%` },
     { label: "Time Taken", value: formatTimeTaken(timeTaken) },
   ];
-
-  // Wrong answers list
-  const wrongAnswersList = results.filter(
-    (question) => question.userAnswer && question.userAnswer !== question.answer
-  );
 
   const saveResults = useCallback(async () => {
     if (
@@ -153,6 +151,20 @@ const Results = () => {
     saveResults();
   }, []);
 
+  //prevent browser reload and loss of data(ask for confirmation)
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ""; // This is required for Chrome
+      return ""; // This is required for Firefox
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }, []);
+
+
   // Prevent going back to QuizPage
   useEffect(() => {
     const handleBackNavigation = (e) => {
@@ -169,45 +181,62 @@ const Results = () => {
     };
   }, [navigate]);
 
-  // Capture full-screen image without inlining external CSS/fonts
-  const onButtonClick = useCallback(() => {
-    if (!ref.current) return;
-
-    toast.promise(
-      toPng(ref.current, {
-        cacheBust: true,
-        useCORS: true,
-        backgroundColor: "#000",
-        // Never attempt to read external or embedded style sheets
-        filter: (node) => {
-          // Exclude any <link> or <style> tags entirely
-          if (node.tagName === "LINK" || node.tagName === "STYLE") return false;
-          // Only serialize nodes inside your result container
-          return ref.current.contains(node);
-        },
-        // Make sure html-to-image doesn’t even try to grab CSSRules or fonts
-        skipAutoStyle: true,
-        skipFonts: true,
-      }).then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "quiz-results.png";
-        link.href = dataUrl;
-        link.click();
-      }),
-      {
-        loading: "Preparing download…",
-        success: "Download successful!",
-        error: "Failed to capture image",
-      }
-    );
-  }, []);
-
   // Redirect if no state
   useEffect(() => {
     if (!location.state) {
       navigate("/quiz-dashboard", { replace: true });
     }
   }, [location.state, navigate]);
+
+  // Download Certificate
+  const downloadCertificate = async () => {
+    const certificateRef = printRef.current;
+    if (!certificateRef) {
+      console.error('Certificate element not found');
+      return;
+    }
+
+    try {
+      // Small delay to ensure the DOM is fully painted
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const canvas = await html2canvas(certificateRef, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: true,
+        width: 1122, // Force width to A4 landscape
+        height: 793  // Force height to A4 landscape
+      });
+
+      if (canvas.width === 0 || canvas.height === 0) {
+        console.error("Captured blank canvas! Cannot generate certificate.");
+        return;
+      }
+
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "pt",  // Use 'pt' (1/72 inch) for real-world sizing
+        format: "a4",
+        putOnlyUsedFonts: true,
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20; // Margin for the PDF
+
+      pdf.addImage(imgData, "PNG", margin, margin, pdfWidth - 2 * margin, pdfHeight - 2 * margin);
+      pdf.save(`BuzzIQ_Certificate_${username}.pdf`);
+      toast.success("Certificate downloaded successfully!");
+
+    } catch (error) {
+      console.error("Error generating certificate PDF:", error);
+      toast.error("Failed to download certificate.");
+    }
+  };
 
   return (
     <div className="w-full text-white mb-10">
@@ -246,7 +275,7 @@ const Results = () => {
         }}
       />
 
-      <div ref={ref} className="flex flex-col gap-7 items-center justify-center px-5 bg-black">
+      <div className="flex flex-col gap-7 items-center justify-center px-5 bg-black">
         <h1 className="font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700">
           <span className="text-slate-300">
             Review Your Results & Learn More
@@ -254,18 +283,21 @@ const Results = () => {
         </h1>
 
         <div className="flex flex-col w-full max-w-5xl rounded-xl bg-slate-900/50 ring-1 ring-fuchsia-300 px-4 py-6 sm:px-8">
+          {/* Side navigation button - Home and Dashboard */}
           <div className="flex justify-between items-center">
             <button
+              title="Go to Home Page"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
               onClick={() => navigate("/")}
             >
               <House />
             </button>
             <button
+            title="Go to Dashboard"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-              onClick={onButtonClick}
+              onClick={() => navigate("/quiz-dashboard")}
             >
-              <Download />
+              <Logs />
             </button>
           </div>
 
@@ -275,7 +307,7 @@ const Results = () => {
               <h2 className="text-2xl font-semibold text-center">
                 Quiz Results
               </h2>
-              <div className="bg-slate-700/30 px-5 md:px-7 h-full rounded-lg flex flex-col justify-center gap-y-2">
+              <div className="space-y-2 bg-slate-700/30 px-5 md:px-7 py-3 rounded-lg">
                 {resultInfo.map((item, index) => (
                   <div
                     key={index}
@@ -291,8 +323,8 @@ const Results = () => {
             </div>
 
             {/* Pie chart section */}
-            <div className="flex flex-col md:w-1/2 gap-4">
-              <h2 className="text-2xl font-semibold text-center">
+            <div className="flex flex-col md:w-1/2">
+              <h2 className="text-2xl font-semibold mb-4 text-center">
                 Performance Overview
               </h2>
               <PieChartComponent
@@ -301,59 +333,38 @@ const Results = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between gap-6 w-full mt-5">
-            {/* Incorrect answers card */}
-            <div className="max-md:min-w-[300px] md:w-1/2">
-              <h3 className="text-xl font-semibold mb-3 text-center">
-                Incorrect Answers
-              </h3>
-              {attemptedQuestions === 0 ? (
-                <div className="bg-slate-700/30 p-3 rounded-lg">
-                  <p className="text-center text-sm md:text-base text-gray-400 py-4">
-                    You didn&apos;t attempt any questions.
-                  </p>
-                </div>
-              ) : wrongAnswersList.length > 0 ? (
-                <div className="space-y-4 max-h-40 overflow-y-auto pr-2">
-                  {wrongAnswersList.map((question, index) => (
-                    <div
-                      key={index}
-                      className="bg-slate-700/30 p-3 rounded-lg"
-                    >
-                      <p className="font-medium text-fuchsia-300">
-                        Q {question.id || index + 1}: {question.question}
-                      </p>
-                      <p className="mt-1 text-sm text-red-400">
-                        Your answer: {question.userAnswer}
-                      </p>
-                      <p className="text-sm text-green-400">
-                        Correct answer: {question.answer}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-slate-700/30 p-3 rounded-lg">
-                  <p className="text-center text-sm md:text-base text-gray-400 py-4">
-                    All answers were correct! Great job!
-                  </p>
-                </div>
-              )}
+          {/* Bottom Navigation - Download certificate and Retake Quiz button  */}
+          <div className="flex flex-col md:flex-row items-center justify-around gap-6 mt-6">
+            {/* Certification div - hidden from the users */}
+            <div className="absolute opacity-0 pointer-events-none -top-[9999px] -left-[9999px]">
+              <Certificate
+                connectRef={printRef}
+                username={username}
+                subject={formattedTopic}
+                percentage={percentage}
+                date={new Date().toLocaleDateString()}
+              />
             </div>
 
-            {/* Quotes depending on results */}
-            <div className="max-md:min-w-[300px] md:w-1/2 max-sm:mt-2">
-              <QuoteByScore percentage={percentage} />
-            </div>
-          </div>
+            {/* Download certificate button */}
+            {percentage >= 65 && (
+              <DownloadBtn name="Claim Your Certificate" onClick={downloadCertificate} />
+            )}
 
-          <div className="flex flex-row items-center justify-between mt-6">
-            <GradientBtn name="Dashboard" onClick={() => navigate("/quiz-dashboard")} />
-            <GradientBtn name="Retake Quiz"
-              onClick={() => navigate(`/quiz/${topic || "computer_fundamentals"}`)} />
+            {/* Retake quiz button */}
+            <GradientBtn
+              name="Retake Quiz"
+              onClick={() => navigate(`/quiz/${topic || "computer_fundamentals"}`)}
+            />
           </div>
         </div>
 
+         {/* Feedback dialog */}
+          <div>
+            <FeedbackDialog className="mt-5" />
+          </div>
+
+        {/* Copyright section */}
         <div className="w-full flex justify-center text-center">
           <div className="flex gap-0.5 items-center">
             <img src="src/assets/images/BuzzIQ_logo.png" alt="BuzzIQ logo" className="h-[12px]" />
