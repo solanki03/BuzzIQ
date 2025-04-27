@@ -9,6 +9,7 @@ import { Download, House } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import toast, { Toaster } from "react-hot-toast";
 import QuoteByScore from "@/components/QuoteByScore";
+import { FeedbackDialog } from "@/components/Feedback";
 
 const Results = () => {
   const navigate = useNavigate();
@@ -209,6 +210,8 @@ const Results = () => {
     }
   }, [location.state, navigate]);
 
+
+
   return (
     <div className="w-full text-white mb-10">
       <Navbar className="sticky! z-[80] bg-black/80 backdrop-blur-sm transition-all duration-300 ease-in-out" />
@@ -353,6 +356,11 @@ const Results = () => {
               onClick={() => navigate(`/quiz/${topic || "computer_fundamentals"}`)} />
           </div>
         </div>
+
+         {/* Feedback dialog */}
+          <div>
+            <FeedbackDialog className="mt-5" />
+          </div>
 
         <div className="w-full flex justify-center text-center">
           <div className="flex gap-0.5 items-center">
