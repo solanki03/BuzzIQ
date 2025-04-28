@@ -157,12 +157,12 @@ const Results = () => {
       e.preventDefault();
       e.returnValue = ""; // This is required for Chrome
       return ""; // This is required for Firefox
-      };
-      window.addEventListener("beforeunload", handleBeforeUnload);
-      return () => {
-        window.removeEventListener("beforeunload", handleBeforeUnload);
-      };
-    }, []);
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
 
   // Prevent going back to QuizPage
@@ -293,7 +293,7 @@ const Results = () => {
               <House />
             </button>
             <button
-            title="Go to Dashboard"
+              title="Go to Dashboard"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
               onClick={() => navigate("/quiz-dashboard")}
             >
@@ -342,7 +342,7 @@ const Results = () => {
                 username={username}
                 subject={formattedTopic}
                 percentage={percentage}
-                date={new Date().toLocaleDateString()}
+                date={new Date().toLocaleDateString('en-GB')}
               />
             </div>
 
@@ -359,20 +359,18 @@ const Results = () => {
           </div>
         </div>
 
-         {/* Feedback dialog */}
-          <div>
-            <FeedbackDialog className="mt-5" />
-          </div>
-
-        {/* Copyright section */}
-        <div className="w-full flex justify-center text-center">
-          <div className="flex gap-0.5 items-center">
-            <img src="src/assets/images/BuzzIQ_logo.png" alt="BuzzIQ logo" className="h-[12px]" />
-            <p className="text-sm text-gray-400">
-              &copy; {new Date().getFullYear()} All Rights Reserved
-            </p>
-          </div>
+        {/* Feedback dialog */}
+        <div className="w-full flex justify-center-safe lg:justify-end mt-5 lg:my-0 lg:mr-5">
+          <FeedbackDialog />
         </div>
+      </div>
+
+      {/* Copyright section */}
+      <div className="w-full flex justify-center text-center mt-5 lg:m-0">
+        <p className="text-sm text-gray-400">
+          <span className="font-Warnes! font-medium!">BuzzIQ </span>
+          &copy; {new Date().getFullYear()} All Rights Reserved
+        </p>
       </div>
     </div>
   );

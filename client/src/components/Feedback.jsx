@@ -1,6 +1,7 @@
 import { Star, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
+import RateUsButton from "./RateUsButton";
 
 import {
   Dialog,
@@ -50,7 +51,7 @@ export function FeedbackDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-semibold shadow-lg hover:scale-105 transition-transform duration-300">Give Feedback</Button>
+        <RateUsButton name="Rate Us" />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white rounded-2xl p-6 shadow-2xl">
         {/* cross button */}
