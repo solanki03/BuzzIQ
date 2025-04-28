@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import {
@@ -10,6 +10,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import ParticipationChart from "./ParticipationChart";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import { Skeleton } from "@/components/ui/skeleton";
+import SubjectPerformanceAccordion from "./SubjectPerformanceCharts";
+import { Button } from "@/components/ui/button"; // Only one correct import
+import { useClerk } from "@clerk/clerk-react";
 
 const UserProfile = ({ user }) => {
   const [rawData, setRawData] = useState(null);
@@ -17,58 +27,69 @@ const UserProfile = ({ user }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(null);
   const [availableYears, setAvailableYears] = useState([]);
+  
+  const { signOut, openUserProfile } = useClerk(); // get Clerk functions
 
-  const handleOpenSheet = async () => {
-    if (!user?.id) {
-      setIsSheetOpen(true);
-      return;
-    }
+  // fetch whenever sheet opens
+  useEffect(() => {
+    if (!isSheetOpen || !user?.id) return;
 
-    setIsSheetOpen(true);
     setLoading(true);
+    axios
+      .get(`http://localhost:5000/v1/chart/${user.id}`)
+      .then(({ data: resp }) => {
+        if (resp.success) {
+          const fetched = resp.data;
+          setRawData(fetched);
 
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/v1/chart/${user.id}`
-      );
-      if (response.data.success) {
-        const fetchedData = response.data.data;
-        setRawData(fetchedData);
+          // derive & sort years descending
+          const yrs = Array.from(
+            new Set(fetched.dates.map((d) => new Date(d).getFullYear()))
+          ).sort((a, b) => b - a);
 
-        const years = [
-          ...new Set(
-            fetchedData.map((item) => new Date(item.date).getFullYear())
-          ),
-        ].sort((a, b) => b - a);
-        setAvailableYears(years);
-        setSelectedYear(years[0] || new Date().getFullYear());
-      }
-    } catch (err) {
-      console.error("Fetch failed:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+          setAvailableYears(yrs);
+          setSelectedYear(yrs[0] || new Date().getFullYear());
+        }
+      })
+      .catch((err) => console.error("Fetch failed:", err))
+      .finally(() => setLoading(false));
+  }, [isSheetOpen, user?.id]);
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-      <SheetTrigger onClick={handleOpenSheet}>
+      <SheetTrigger>
         <Avatar className="h-10 w-10">
           <AvatarImage src={user?.imageUrl} />
           <AvatarFallback className="bg-black text-white">
-            {user?.firstName?.charAt(0)}
-            {user?.lastName?.charAt(0)}
+            {user?.firstName?.[0]}
+            {user?.lastName?.[0]}
           </AvatarFallback>
         </Avatar>
       </SheetTrigger>
 
-      <SheetContent className="h-full bg-zinc-950 z-[120] px-5 py-5 overflow-y-auto scrollbar-black">
-        <SheetHeader className="p-0 text-2xl">
-          <SheetTitle>{user?.fullName || "User Profile"}</SheetTitle>
-          <SheetDescription className="text-xs">
-            Your personalized dashboard displaying participation statistics and
-            subject-wise performance insights.
+      <SheetContent className="h-full bg-zinc-950 px-5 py-5 overflow-y-auto scrollbar-black">
+        <SheetHeader className="p-0 text-2xl gap-0">
+          <SheetTitle className="leading-tight">{user?.fullName || "User Profile"}</SheetTitle>
+          <SheetDescription className="text-xs text-gray-400">
+            Your personalized dashboard
           </SheetDescription>
+          <div className="flex w-full justify-between mt-4 opacity-80">
+            <Button
+              onClick={openUserProfile}
+              className="bg-black text-white hover:bg-neutral-900 transition-all duration-500 border"
+            >
+              Manage Account
+            </Button>
+
+            <Button
+              onClick={() => signOut()}
+              className="bg-zinc-900 hover:bg-zinc-950 text-white hover:text-red-500 duration-300 transition-all"
+            >
+              Log Out
+            </Button>
+          </div>
+
+          
         </SheetHeader>
 
         <h1 className="text-xl border-t pt-2 capitalize mt-4">
@@ -83,53 +104,43 @@ const UserProfile = ({ user }) => {
           setSelectedYear={setSelectedYear}
         />
 
-        <div>
-        <h1 className="text-xl border-t pt-2 capitalize mt-4">
-          Performance
-        </h1>
-        <SheetDescription className="text-xs">
-            User performance upon different subjects
+        <div className="mt-6">
+          <h1 className="text-xl capitalize">Performance</h1>
+          <SheetDescription className="text-xs mb-2">
+            User performance across subjects
           </SheetDescription>
-        {AccordionDemo()}
-        </div>
 
+          {loading ? (
+            <div className="flex gap-4 flex-col">
+              {Array(4)
+                .fill(0)
+                .map((_, idx) => (
+                  <Skeleton key={idx} className="h-12 w-full rounded-lg" />
+                ))}
+            </div>
+          ) : rawData?.topics?.length ? (
+            <Accordion type="single" collapsible className="w-full">
+              {rawData.topics.map((topic) => (
+                <AccordionItem key={topic} value={topic}>
+                  <AccordionTrigger className="capitalize hover:no-underline">
+                    {topic}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <SubjectPerformanceAccordion
+                      userId={user.id}
+                      topic={topic}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          ) : (
+            <p className="text-sm text-muted-foreground">No topics found</p>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );
 };
 
 export default UserProfile;
-
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-
-export function AccordionDemo() {
-  return (
-    <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value="item-1">
-        <AccordionTrigger>Is it accessible?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It adheres to the WAI-ARIA design pattern.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="item-2">
-        <AccordionTrigger>Is it styled?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It comes with default styles that matches the other
-          components&apos; aesthetic.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="item-3">
-        <AccordionTrigger>Is it animated?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It's animated by default, but you can disable it if you prefer.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  )
-}

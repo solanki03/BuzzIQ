@@ -158,38 +158,79 @@ app.post('/v1/results', async (req, res) => {
   }
 });
 
-// Get user's results by username
-app.get('/v1/results/:username', async (req, res) => {
-  try {
-    const { username } = req.params;
 
-    if (!username) {
-      return res.status(400).json({
-        success: false,
-        error: 'Username is required'
+app.get('/v1/results/:userId/:topicname', async (req, res) => {
+  try {
+    const { userId, topicname } = req.params;
+
+    // Convert URL-friendly topic name to display format
+    // python_programming → Python Programming
+    const displayTopic = topicname
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+    // Find all collections that might contain this user's results
+    const collections = await resultsDB.db.listCollections({ name: /^results_/ }).toArray();
+    
+    let totalAttempts = 0;
+    let totalCorrectAnswers = 0;
+    let totalWrongAnswers = 0;
+    let totalNotAttemptedAnswers = 0;
+    let totalQuestions = 0;
+
+    // Search through all results collections for this user's topic data
+    for (const coll of collections) {
+      const Model = resultsDB.model(coll.name, resultSchema);
+      const results = await Model.find({ 
+        userId: userId,
+        topic: displayTopic 
+      });
+
+      // Aggregate the statistics
+      results.forEach(result => {
+        totalAttempts++;
+        totalCorrectAnswers += result.correctAnswers || 0;
+        totalWrongAnswers += result.wrongAnswers || 0;
+        const notAttempted = (result.totalQuestions || 0) - 
+                           (result.correctAnswers || 0) - 
+                           (result.wrongAnswers || 0);
+        totalNotAttemptedAnswers += notAttempted > 0 ? notAttempted : 0;
+        totalQuestions += result.totalQuestions || 0;
       });
     }
 
-    const Result = getResultModel(username);
-    const results = await Result.find().sort({ createdAt: -1 });
+    // If no results found
+    if (totalAttempts === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'No results found for this user and topic combination'
+      });
+    }
 
+    // Return the aggregated data in the requested format
     res.json({
       success: true,
-      data: results
+      data: {
+        totalAttempts,
+        totalCorrectAnswers,
+        totalWrongAnswers,
+        totalNotAttemptedAnswers,
+        totalQuestions
+      }
     });
 
   } catch (err) {
-    console.error('Error fetching results:', err);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch results'
+    console.error('Error in /v1/results/:userId/:topicname:', err);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error'
     });
   }
 });
 
 
 // Route 1: User's participation (date + score)
-// Add this endpoint to your backend
+// Updated endpoint to send date and distinct topics
 app.get('/v1/chart/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -198,26 +239,24 @@ app.get('/v1/chart/:userId', async (req, res) => {
       return res.status(400).json({ success: false, error: 'User ID is required' });
     }
 
-    // Need to find which collection contains this userId
     const collections = await resultsDB.db.listCollections().toArray();
     
-    let chartData = [];
+    let dates = [];
+    let topicsSet = new Set();
     
-    // Search through all results_* collections
     for (const coll of collections) {
       if (coll.name.startsWith('results_')) {
         const Model = resultsDB.model(coll.name, resultSchema);
         const userResults = await Model.find({ userId }, { 
           createdAt: 1, 
-          correctAnswers: 1, 
-          totalQuestions: 1 
+          topic: 1 
         }).sort({ createdAt: 1 });
         
         if (userResults.length > 0) {
-          chartData = userResults.map(doc => ({
-            date: doc.createdAt,
-            score: ((doc.correctAnswers / doc.totalQuestions) * 100).toFixed(2)
-          }));
+          userResults.forEach(doc => {
+            if (doc.createdAt) dates.push(doc.createdAt);
+            if (doc.topic) topicsSet.add(doc.topic);
+          });
           break; // Found the user's collection
         }
       }
@@ -225,7 +264,10 @@ app.get('/v1/chart/:userId', async (req, res) => {
     
     res.json({
       success: true,
-      data: chartData
+      data: {
+        dates: dates,
+        topics: Array.from(topicsSet)
+      }
     });
     
   } catch (err) {
@@ -235,35 +277,8 @@ app.get('/v1/chart/:userId', async (req, res) => {
 });
 
 
-// Route 2: Scores by Topic Name
-app.get('/v1/results/:username/:topicname', async (req, res) => {
-  try {
-    const { username, topicname } = req.params;
 
-    if (!username || !topicname) {
-      return res.status(400).json({ success: false, error: 'Username and topic name are required' });
-    }
 
-    const Result = getResultModel(username);
-
-    // Find all attempts matching the topic
-    const results = await Result.find({ topic: topicname }, { correctAnswers: 1, totalQuestions: 1, createdAt: 1 }).sort({ createdAt: 1 });
-
-    const topicScores = results.map(doc => ({
-      date: doc.createdAt,
-      score: ((doc.correctAnswers / doc.totalQuestions) * 100).toFixed(2)
-    }));
-
-    res.json({
-      success: true,
-      data: topicScores
-    });
-
-  } catch (err) {
-    console.error('Error fetching topic scores:', err);
-    res.status(500).json({ success: false, error: 'Failed to fetch topic scores' });
-  }
-});
 
 
 module.exports = app;
