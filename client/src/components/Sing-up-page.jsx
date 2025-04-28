@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSignUp, useSignIn } from "@clerk/clerk-react";
+import { useSignUp } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,35 +13,36 @@ import { Label } from "@/components/ui/label";
 import { DialogDescription } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
-export function SignUpPage({afterSignUpUrl}) {
+export function SignUpPage({ afterSignUpUrl = "/" }) {
   const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    otp: ""
+  });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showOtpPage, setShowOtpPage] = useState(false); // Show OTP page for verification
-  const [otp, setOtp] = useState(""); // OTP for email verification
-  const [showProfileForm, setShowProfileForm] = useState(false); // Show profile form after OTP verification
-  const [name, setName] = useState(""); // User's name
-  const [profession, setProfession] = useState(""); // User's profession
-  const [interestedField, setInterestedField] = useState(""); // User's interested field
+  const [showOtpPage, setShowOtpPage] = useState(false);
 
-  // Regex for email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!isSignUpLoaded || !signUp) return;
+    if (!isSignUpLoaded) return;
 
-    // Validate email format
-    if (!emailRegex.test(email)) {
+    // Validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    // Basic form validation
-    if (!email || !password) {
-      setError("Please fill in all fields.");
+    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+      setError("Please fill in all required fields.");
       return;
     }
 
@@ -49,16 +50,14 @@ export function SignUpPage({afterSignUpUrl}) {
     setError("");
 
     try {
-      // Attempt to sign up with email and password
       await signUp.create({
-        emailAddress: email,
-        password,
+        emailAddress: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
       });
 
-      // Send OTP to the user's email
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      // Show OTP input for verification
       setShowOtpPage(true);
     } catch (err) {
       console.error("Sign up error:", err);
@@ -70,10 +69,9 @@ export function SignUpPage({afterSignUpUrl}) {
 
   const handleOtpVerification = async (e) => {
     e.preventDefault();
-    if (!isSignUpLoaded || !signUp) return;
+    if (!isSignUpLoaded) return;
 
-    // Basic form validation
-    if (!otp) {
+    if (!formData.otp) {
       setError("Please enter the OTP.");
       return;
     }
@@ -82,47 +80,16 @@ export function SignUpPage({afterSignUpUrl}) {
     setError("");
 
     try {
-      // Verify the OTP
       const result = await signUp.attemptEmailAddressVerification({
-        code: otp,
+        code: formData.otp,
       });
 
       if (result.status === "complete") {
-        console.log("Email verified successfully!");
-        // Show the profile form after OTP verification
-        setShowProfileForm(true);
-      } else {
-        console.log("Further verification required:", result);
+        window.location.href = afterSignUpUrl;
       }
     } catch (err) {
       console.error("OTP verification error:", err);
       setError(err.errors?.[0]?.message || "OTP verification failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-
-    // Basic form validation
-    if (!name || !profession || !interestedField) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    setIsLoading(true);
-    setError("");
-
-    try {
-      // Save user profile data (you can send this data to your backend)
-      console.log("User Profile Data:", { name, profession, interestedField });
-
-      // Redirect to the home page or dashboard
-      window.location.href = afterSignUpUrl ? afterSignUpUrl : "/";
-    } catch (err) {
-      console.error("Profile submission error:", err);
-      setError("Failed to save profile. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -142,10 +109,33 @@ export function SignUpPage({afterSignUpUrl}) {
         </CardHeader>
 
         <CardContent className="w-full">
-          {!showOtpPage && !showProfileForm ? (
-            // Sign-Up Form
+          {!showOtpPage ? (
             <form onSubmit={handleSignUp}>
               <div className="grid gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -153,9 +143,8 @@ export function SignUpPage({afterSignUpUrl}) {
                     type="email"
                     placeholder="name@example.com"
                     autoComplete="email"
-                    autoCapitalize="none"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -165,22 +154,31 @@ export function SignUpPage({afterSignUpUrl}) {
                     id="password"
                     type="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required
                   />
                 </div>
               </div>
               {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
               <CardFooter className="w-full mt-4 flex justify-center">
-                <Button type="submit" className="w-1/2 cursor-pointer" disabled={isLoading}>
-                  {isLoading ? <><Loader2 className="animate-spin" /> Signing Up...</> : "Sign Up"}
+                <Button
+                  type="submit"
+                  className="w-1/2 cursor-pointer"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" size={18} />
+                      Signing Up...
+                    </>
+                  ) : (
+                    "Sign Up"
+                  )}
                 </Button>
               </CardFooter>
             </form>
-          ) : showOtpPage && !showProfileForm ? (
-            // OTP Verification Form
+          ) : (
             <form onSubmit={handleOtpVerification}>
               <div className="grid gap-4">
                 <div className="grid gap-2">
@@ -189,61 +187,27 @@ export function SignUpPage({afterSignUpUrl}) {
                     id="otp"
                     type="text"
                     placeholder="Enter OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
+                    value={formData.otp}
+                    onChange={handleChange}
                     required
                   />
                 </div>
               </div>
               {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
               <CardFooter className="w-full mt-4 flex justify-center">
-                <Button type="submit" className="w-1/2 cursor-pointer" disabled={isLoading}>
-                  {isLoading ? <><Loader2 className="animate-spin" /> Verifying...</> : "Verify OTP"}
-                </Button>
-              </CardFooter>
-            </form>
-          ) : (
-            // Profile Form (after OTP verification)
-            <form onSubmit={handleProfileSubmit}>
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="profession">Profession</Label>
-                  <Input
-                    id="profession"
-                    type="text"
-                    placeholder="Software Engineer"
-                    value={profession}
-                    onChange={(e) => setProfession(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="interestedField">Interested Field</Label>
-                  <Input
-                    id="interestedField"
-                    type="text"
-                    placeholder="e.g., Technology, Science, Arts"
-                    value={interestedField}
-                    onChange={(e) => setInterestedField(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-              <CardFooter className="w-full mt-4 flex justify-center">
-                <Button type="submit" className="w-1/2 cursor-pointer" disabled={isLoading}>
-                  {isLoading ? <><Loader2 className="animate-spin" /> Saving...</> : "Save Profile"}
+                <Button
+                  type="submit"
+                  className="w-1/2 cursor-pointer"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" size={18} />
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify OTP"
+                  )}
                 </Button>
               </CardFooter>
             </form>

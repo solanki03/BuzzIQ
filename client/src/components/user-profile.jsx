@@ -27,12 +27,13 @@ const UserProfile = ({ user }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(null);
   const [availableYears, setAvailableYears] = useState([]);
-  
+
   const { signOut, openUserProfile } = useClerk(); // get Clerk functions
 
   // fetch whenever sheet opens
   useEffect(() => {
     if (!isSheetOpen || !user?.id) return;
+    console.log(user.fullName)
 
     setLoading(true);
     axios
@@ -69,7 +70,9 @@ const UserProfile = ({ user }) => {
 
       <SheetContent className="h-full bg-zinc-950 px-5 py-5 overflow-y-auto scrollbar-black">
         <SheetHeader className="p-0 text-2xl gap-0">
-          <SheetTitle className="leading-tight">{user?.fullName || "User Profile"}</SheetTitle>
+          <SheetTitle className="leading-tight capitalize">
+            {user?.fullName || "User Profile"}
+          </SheetTitle>
           <SheetDescription className="text-xs text-gray-400">
             Your personalized dashboard
           </SheetDescription>
@@ -88,56 +91,77 @@ const UserProfile = ({ user }) => {
               Log Out
             </Button>
           </div>
-
-          
         </SheetHeader>
 
         <h1 className="text-xl border-t pt-2 capitalize mt-4">
           Participation Statistics
         </h1>
 
-        <ParticipationChart
-          rawData={rawData}
-          loading={loading}
-          selectedYear={selectedYear}
-          availableYears={availableYears}
-          setSelectedYear={setSelectedYear}
-        />
-
-        <div className="mt-6">
-          <h1 className="text-xl capitalize">Performance</h1>
-          <SheetDescription className="text-xs mb-2">
-            User performance across subjects
-          </SheetDescription>
-
-          {loading ? (
-            <div className="flex gap-4 flex-col">
-              {Array(4)
-                .fill(0)
-                .map((_, idx) => (
-                  <Skeleton key={idx} className="h-12 w-full rounded-lg" />
-                ))}
+        {loading ? (
+          <div className="space-y-4">
+            <div className="flex gap-2 overflow-x-auto">
+              {[2023, 2024].map(
+                (
+                  y // Placeholder years for skeleton
+                ) => (
+                  <Skeleton key={y} className="h-8 w-16 rounded-md" />
+                )
+              )}
             </div>
-          ) : rawData?.topics?.length ? (
-            <Accordion type="single" collapsible className="w-full">
-              {rawData.topics.map((topic) => (
-                <AccordionItem key={topic} value={topic}>
-                  <AccordionTrigger className="capitalize hover:no-underline">
-                    {topic}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <SubjectPerformanceAccordion
-                      userId={user.id}
-                      topic={topic}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          ) : (
-            <p className="text-sm text-muted-foreground">No topics found</p>
-          )}
-        </div>
+            <Skeleton className="h-70 w-full rounded-md" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        ) : rawData?.dates?.length > 0 ? (
+          <>
+            <ParticipationChart
+              rawData={rawData}
+              loading={false} // No longer needed since we handled loading
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              availableYears={availableYears}
+            />
+
+            <div className="mt-6">
+              <h1 className="text-xl capitalize">Performance</h1>
+              <SheetDescription className="text-xs mb-2">
+                User performance across subjects
+              </SheetDescription>
+
+              {loading ? (
+                <div className="flex gap-4 flex-col">
+                  {Array(4)
+                    .fill(0)
+                    .map((_, idx) => (
+                      <Skeleton key={idx} className="h-12 w-full rounded-lg" />
+                    ))}
+                </div>
+              ) : rawData?.topics?.length ? (
+                <Accordion type="single" collapsible className="w-full">
+                  {rawData.topics.map((topic) => (
+                    <AccordionItem key={topic} value={topic}>
+                      <AccordionTrigger className="capitalize hover:no-underline">
+                        {topic}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <SubjectPerformanceAccordion
+                          userId={user.id}
+                          topic={topic}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              ) : (
+                <p className="text-sm text-muted-foreground">No topics found</p>
+              )}
+            </div>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground">No records found</p>
+        )}
       </SheetContent>
     </Sheet>
   );
