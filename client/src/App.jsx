@@ -4,6 +4,16 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import StartSessionButton from "./components/StartSessionButton";
 import Navbar from "./components/Navbar";
 import ChatBot from "./components/Chatbot";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { aboutUsContent, termsOfService, privacyPolicy, services } from "./utils/info.js";
 
 const App = () => {
   const devs = [
@@ -23,21 +33,6 @@ const App = () => {
       name: "Trishagni Mondal",
       linkedin: "https://www.linkedin.com/in/trishagni-mondal-480a5b29a/",
     },
-  ];
-
-  const topics = [
-    "Comp. Fundamentals",
-    "Comp. Science & Tech",
-    "C Programming",
-    "Java Programming",
-    "Python Programming",
-    "General Knowledge",
-    "Verbal Ability",
-    "Logical Reasoning",
-    "Quantitative Aptitude",
-    "Medical Science",
-    "Biotechnology",
-    "Soft Skills",
   ];
 
   return (
@@ -94,10 +89,12 @@ const App = () => {
       <ChatBot />
 
       {/* Footer */}
-      <footer className="w-full flex flex-col justify-center items-center px-8 sm:px-15 text-white">
-        <div className="container flex flex-wrap max-sm:justify-between justify-around items-center border-t border-gray-700 py-8">
-          {/* Left Section - Branding */}
-          <div className="mb-6 md:mb-0">
+      <footer className="w-full flex flex-col justify-center px-8 sm:px-15 text-white">
+        {/* Top Section */}
+        <div className="container flex flex-col md:flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-8">
+          
+          {/* Branding */}
+          <div className="flex flex-col max-sm:items-center-safe items-start mb-6 md:mb-0">
             <h2 className="text-2xl md:text-3xl font-Warnes! text-white">BuzzIQ</h2>
             <p className="text-gray-400 text-sm sm:text-base">Get Smart. Get Buzzed.</p>
             {/* Social Media Icons */}
@@ -125,10 +122,113 @@ const App = () => {
             </div>
           </div>
 
-          {/* Middle Section - Developers */}
-          <div className="mb-6 md:mb-0">
+          {/* About & Legal Section */}
+          <div className="flex flex-col max-sm:items-center-safe items-start gap-2 text-[12px] md:text-sm mt-2 mb-6 md:mb-0">
+
+            {/* About us */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="text-base font-semibold text-white mb-2">About Us</button>
+              </DialogTrigger>
+              <DialogContent className="bg-slate-900/80 border-0 ring-1 ring-purple-400 py-9 px-8 max-h-3/5 overflow-y-scroll scrollbar-black">
+                <DialogClose className="absolute top-4 right-5">
+                  <i className="fa-solid fa-xmark text-fuchsia-300"></i>
+                </DialogClose>
+                <DialogHeader>
+                  <DialogTitle className="text-fuchsia-400 text-center text-xl mb-2">About Us</DialogTitle>
+                  <DialogDescription className="text-gray-300 px-2 font-medium text-left space-y-3">
+                    {aboutUsContent.map((item, index) => (
+                      <div key={index}>
+                        <p className="font-semibold text-white">{item.title}</p>
+                        <p>{item.description}</p>
+                      </div>
+                    ))}
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+            {/* Terms of Service */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="text-base font-semibold text-white mb-2">Terms of Service</button>
+              </DialogTrigger>
+              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
+                <DialogClose className="absolute top-4 right-5">
+                  <i className="fa-solid fa-xmark text-fuchsia-300"></i>
+                </DialogClose>
+                <DialogHeader>
+                  <DialogTitle className="text-fuchsia-400 text-center text-xl mb-2">Terms of Service</DialogTitle>
+                  <DialogDescription className="text-gray-300 text-left px-2 font-medium">
+                    <p><strong>Effective Date: </strong>{termsOfService.effectiveDate}</p>
+                    <p className="my-3 text-sm md:text-base">{termsOfService.intro}</p>
+                    <ul className="text-xs md:text-sm space-y-2 list-disc list-inside">
+                      {termsOfService.points.map((item, index) => (
+                        <li key={index}>
+                          <strong className="text-purple-400">{item.title}:</strong> {item.description}
+                        </li>
+                      ))}
+                    </ul>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+            {/* Privacy Policy */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="text-base font-semibold text-white mb-2">Privacy Policy</button>
+              </DialogTrigger>
+              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
+                <DialogClose className="absolute top-4 right-5">
+                  <i className="fa-solid fa-xmark text-fuchsia-300"></i>
+                </DialogClose>
+                <DialogHeader>
+                  <DialogTitle className="text-fuchsia-400 text-center text-xl mb-2">Privacy Policy</DialogTitle>
+                  <DialogDescription className="text-gray-300 text-left px-2 font-medium">
+                    <p><strong>Effective Date: </strong>{privacyPolicy.effectiveDate}</p>
+                    <p className="my-3 text-sm md:text-base">{privacyPolicy.intro}</p>
+                    <div className="space-y-4 text-xs md:text-sm">
+                      {privacyPolicy.sections.map((section, index) => (
+                        <div key={index}>
+                          <strong className="text-purple-400">{section.title}:</strong>
+                          {section.points ? (
+                            <ul className="list-disc list-inside mt-1 ml-2 space-y-1">
+                              {section.points.map((point, i) => (
+                                <li key={i}>{point}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="mt-1 ml-2">{section.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Services */}
+          <div className="max-sm:text-center text-gray-400 mb-6 md:mb-0">
+            <h3 className="text-base font-semibold text-white mb-2">Services</h3>
+            <ul className="grid grid-cols-2 gap-x-5 gap-y-1 text-[12px] md:text-sm mb-4 list-none">
+              {services.map((service, index) => (
+                <li
+                  key={index}
+                  className="before:content-['•'] before:mr-1 before:text-purple-400"
+                >
+                  {service}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Developers info */}
+          <div className="max-sm:text-center text-gray-400">
             <h3 className="text-base font-semibold text-white mb-2">Developed by</h3>
-            <ul className="text-gray-400 text-[12px] md:text-sm space-y-1">
+            <ul className="text-[12px] md:text-sm space-y-1">
               {devs.map((dev, index) => (
                 <li key={index}>
                   <a
@@ -143,21 +243,8 @@ const App = () => {
             </ul>
           </div>
 
-          {/* Right Section - Topics */}
-          <div className="text-gray-400">
-            <h3 className="text-base font-semibold text-white mb-2">Topics</h3>
-            <div className="grid grid-cols-3 gap-6 text-[12px] md:text-sm">
-              {[0, 4, 8].map((startIndex) => (
-                <div key={startIndex} className="space-y-1">
-                  {topics
-                    .slice(startIndex, startIndex + 4)
-                    .map((topic, index) => (
-                      <p key={index}>{topic}</p>
-                    ))}
-                </div>
-              ))}
-            </div>
-          </div>
+
+
         </div>
 
         {/* Bottom Copyright Section */}
