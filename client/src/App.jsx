@@ -13,27 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { aboutUsContent, termsOfService, privacyPolicy, services } from "./utils/info.js";
+import { devs, aboutUsContent, termsOfService, privacyPolicy, services } from "./utils/info.js";
 
 const App = () => {
-  const devs = [
-    {
-      name: "Sourav Pal",
-      linkedin: "https://www.linkedin.com/in/sourav-pal-659631266",
-    },
-    {
-      name: "Solanki Singha",
-      linkedin: "https://www.linkedin.com/in/solankisingha",
-    },
-    {
-      name: "Sk Nasim Ali",
-      linkedin: "https://www.linkedin.com/in/sk-nasim-ali/",
-    },
-    {
-      name: "Trishagni Mondal",
-      linkedin: "https://www.linkedin.com/in/trishagni-mondal-480a5b29a/",
-    },
-  ];
 
   return (
     <main className="w-full font-Poppins relative">
@@ -92,7 +74,7 @@ const App = () => {
       <footer className="w-full flex flex-col justify-center px-8 sm:px-15 text-white">
         {/* Top Section */}
         <div className="container flex flex-col md:flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-8">
-          
+
           {/* Branding */}
           <div className="flex flex-col max-sm:items-center-safe items-start mb-6 md:mb-0">
             <h2 className="text-2xl md:text-3xl font-Warnes! text-white">BuzzIQ</h2>
@@ -242,8 +224,6 @@ const App = () => {
               ))}
             </ul>
           </div>
-
-
 
         </div>
 

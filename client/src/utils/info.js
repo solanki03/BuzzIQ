@@ -1,4 +1,25 @@
 
+// Developer Information
+export const devs = [
+    {
+        name: "Sourav Pal",
+        linkedin: "https://www.linkedin.com/in/sourav-pal-659631266",
+    },
+    {
+        name: "Solanki Singha",
+        linkedin: "https://www.linkedin.com/in/solankisingha",
+    },
+    {
+        name: "Sk Nasim Ali",
+        linkedin: "https://www.linkedin.com/in/sk-nasim-ali/",
+    },
+    {
+        name: "Trishagni Mondal",
+        linkedin: "https://www.linkedin.com/in/trishagni-mondal-480a5b29a/",
+    },
+];
+
+// About Us Content
 export const aboutUsContent = [
     {
         title: "Welcome to BuzzIQ!",
@@ -22,6 +43,7 @@ export const aboutUsContent = [
     },
 ];
 
+// Services Content
 export const services = [
     "Proctored Quizzes",
     "Diverse Quiz Topics",
@@ -33,6 +55,7 @@ export const services = [
     "User Dashboard"
 ];
 
+// Terms of Service and Privacy Policy Content
 export const termsOfService = {
     effectiveDate: "30/04/2025",
     intro: "Welcome to BuzzIQ! By using our app, you agree to these Terms and our Privacy Policy. If you don’t agree, please don’t use BuzzIQ.",
@@ -118,3 +141,93 @@ export const privacyPolicy = {
         },
     ],
 };
+
+// Quiz List
+export const quizList = [
+    {
+        id: 1,
+        title: "Computer Fundamentals",
+        description: "Basic fundamental concepts, Internet Technology",
+        image: "src/assets/images/comp_fm.png",
+        collectionName: "computer_fundamentals",
+    },
+    {
+        id: 2,
+        title: "Conputer Science And Technology",
+        description: "DSA, DBMS, OS, Cloud Computing, OOP Concepts",
+        image: "src/assets/images/comp_tech.png",
+        collectionName: "conputer_science_and_technology",
+    },
+    {
+        id: 3,
+        title: "C Programming",
+        description: "Fundamental Concepts of C Programming",
+        image: "src/assets/images/c_prog.png",
+        collectionName: "c_programming",
+    },
+    {
+        id: 4,
+        title: "Java Programming",
+        description: "Fundamental Concepts of Java",
+        image: "src/assets/images/java.png",
+        collectionName: "java_programming",
+    },
+    {
+        id: 5,
+        title: "Python Programming",
+        description: "Fundamental Concepts of Python",
+        image: "src/assets/images/python.png",
+        collectionName: "python_programming",
+    },
+    {
+        id: 6,
+        title: "General Knowledge",
+        description:
+            "History, Geography, Science, Sports, Economics, Current Affairs, etc.",
+        image: "src/assets/images/gk.png",
+        collectionName: "general_knowledge",
+    },
+    {
+        id: 7,
+        title: "Verbal Ability",
+        description: "Concept of Verbal and Grammatical Knowledge",
+        image: "src/assets/images/verbal.png",
+        collectionName: "verbal_ability",
+    },
+    {
+        id: 8,
+        title: "Logical Reasoning",
+        description:
+            "Distance & Direction, Blood Relation, Puzzles, Clock & Calendar, etc.",
+        image: "src/assets/images/reasoning.png",
+        collectionName: "logical_reasoning",
+    },
+    {
+        id: 9,
+        title: "Quantative Aptitude",
+        description: "Ratio, Percentage, Time-Speed-Distance, Work & Time, etc.",
+        image: "src/assets/images/quantitative.png",
+        collectionName: "quantative_aptitude",
+    },
+    {
+        id: 10,
+        title: "Medical Science",
+        description: "Concepts of Medical Science & Fields",
+        image: "src/assets/images/medical.png",
+        collectionName: "medical_science",
+    },
+    {
+        id: 11,
+        title: "Biotechnology",
+        description: "Human & Animal Health, Agriculture, Environment, etc.",
+        image: "src/assets/images/biotech.png",
+        collectionName: "biotechnology",
+    },
+    {
+        id: 12,
+        title: "Soft Skill",
+        description: "Concept of Soft Skills in Professional & Daily Life",
+        image: "src/assets/images/soft_skills.png",
+        collectionName: "soft_skill",
+    },
+];
