@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 5000;
 // Connect to the database
 connectDB();
 
+// Define your routes here
+app.get('/', (req, res) => {
+    res.send('Hello from Vercel Serverless!');
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
