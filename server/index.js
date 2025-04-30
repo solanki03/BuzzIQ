@@ -9,8 +9,15 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: [
+    'https://buzz-iq.vercel.app',
+    'http://localhost:5173'
+  ],
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Results database connection using the existing connection pool
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
