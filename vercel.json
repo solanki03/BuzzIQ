@@ -2,19 +2,21 @@
     "version": 2,
     "builds": [
         {
-            "src": "index.js",
-            "use": "@vercel/node",
-            "config": {
-                "includeFiles": [
-                    "dist/**"
-                ]
-            }
+            "src": "./index.js",
+            "use": "@vercel/node"
         }
     ],
+    "env": {
+        "MONGODB_URI": " "
+    },
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "index.js"
+            "dest": "/",
+            "methods": [
+                "GET",
+                "POST"
+            ]
         }
     ]
 }
