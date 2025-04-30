@@ -4,7 +4,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
 import GradientBtn from "@/components/GradientBtn";
-import stopwatch from "@/assets/images/stopwatch.png";
+import stopwatch from "/images/stopwatch.png";
 import notificationTone from "@/assets/audio/notification_tone.mp3";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
