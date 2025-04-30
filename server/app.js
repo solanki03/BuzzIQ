@@ -278,7 +278,9 @@ app.get('/v1/chart/:userId', async (req, res) => {
 
 
 
-
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 
 
 module.exports = app;
