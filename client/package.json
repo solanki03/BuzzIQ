@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/vite": "^4.0.9",
+    "@vercel/analytics": "^1.5.0",
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
     "class-variance-authority": "^0.7.1",
