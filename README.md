@@ -1,12 +1,53 @@
-# React + Vite
+# BuzzIQ 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BuzzIQ** is a smart and secure online quiz platform designed to offer a fair, engaging, and performance-driven assessment experience. It ensures real-time monitoring, auto-certification, and a dedicated user dashboard, all while prioritizing user privacy and data security.
 
-Currently, two official plugins are available:
+## Screenshot
+<img src="client/public/BuzzIQ_UI.png" alt="BuzzIQ Website's UI" />
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+&nbsp;
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Features
+- Online proctored quizzes
+- Live monitoring during assessments
+- Smart scoring system
+- Auto-generated certificates (for scores >= 65%)
+- Subject-wise quiz topics 
+- Performance tracking via user dashboard
+- Chatbot for app-related assistance 
+- Result-based certificate download
+- Local storage–based user rating system 
+
+## 🛠️ Technology Used
+
+### Frontend
+- Vite + React.js
+- Tailwind CSS
+- Clerk  
+
+### Backend
+- Express.js
+- MongoDB
+
+## 🧾 How to Run the Project
+1. Clone the repository
+2. Run `npm install` in both frontend and backend directories
+3. Set up environment variables (see below)
+4. Run the development server using `npm run dev` or respective command for frontend/backend
+
+## 🔐 Environment Variables
+- `VITE_CLERK_PUBLISHABLE_KEY`
+- `MONGODB_URI`
+
+These should be placed in a `.env` file in both frontend and backend as needed.
+
+## 🧭 Pages Overview
+- **Home Page** – Introduction to BuzzIQ and chatbot access
+- **Quiz Dashboard** – Displays available topics and quiz navigation
+- **Quiz Page** – Main quiz interface with live monitoring
+- **Result Page** – Displays score, download certificate (if eligible), and a rating system
+
+## License
+
+This project is licensed under the **[MIT License](https://choosealicense.com/licenses/mit/)**. See the LICENSE file for more details.
