@@ -100,7 +100,7 @@ const UserProfile = ({ user }) => {
         {loading ? (
           <div className="space-y-4">
             <div className="flex gap-2 overflow-x-auto">
-              {[2023, 2024].map(
+              {availableYears.map(
                 (
                   y // Placeholder years for skeleton
                 ) => (

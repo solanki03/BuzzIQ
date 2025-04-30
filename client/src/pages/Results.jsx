@@ -114,7 +114,7 @@ const Results = () => {
         timeTaken,
       };
       const { data } = await axios.post(
-        "http://localhost:5000/v1/results",
+        `${import.meta.env.VITE_API_URL}/v1/results`,
         payload
       );
       if (!data.success)
@@ -288,14 +288,14 @@ const Results = () => {
             <button
               title="Go to Home Page"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/", { replace: true })}
             >
               <House />
             </button>
             <button
               title="Go to Dashboard"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-              onClick={() => navigate("/quiz-dashboard")}
+              onClick={() => navigate("/quiz-dashboard", { replace: true })}
             >
               <Logs />
             </button>
@@ -334,7 +334,7 @@ const Results = () => {
           </div>
 
           {/* Bottom Navigation - Download certificate and Retake Quiz button  */}
-          <div className="flex flex-col md:flex-row items-center justify-around gap-6 mt-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mt-4">
             {/* Certification div - hidden from the users */}
             <div className="absolute opacity-0 pointer-events-none -top-[9999px] -left-[9999px]">
               <Certificate
@@ -350,8 +350,8 @@ const Results = () => {
             {percentage >= 65 ? (
               <DownloadBtn name="Claim Your Certificate" onClick={downloadCertificate} />
             ) : (
-              <p className="text-xs text-gray-300 text-center bg-slate-800 rounded-full px-4 py-2 mt-2">
-                Note: Earn your certificate by scoring 65% or higher!
+              <p className="text-sm text-gray-300 text-center bg-slate-800 rounded-sm px-4 py-2">
+                <b>Note:</b> Earn your certificate by scoring 65% or higher!
               </p>
             )}
 

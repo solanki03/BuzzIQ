@@ -29,7 +29,7 @@ const SubjectPerformanceAccordion = ({ topic, userId }) => {
       const formattedTopic = topic.toLowerCase().replace(/\s+/g, "_");
 
       const response = await axios.get(
-        `http://localhost:5000/v1/results/${userId}/${formattedTopic}`
+        `${import.meta.env.VITE_API_URL}/v1/results/${userId}/${formattedTopic}`
       );
 
       if (response.data.success) {

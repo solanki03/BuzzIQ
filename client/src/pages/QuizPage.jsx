@@ -49,7 +49,7 @@ const QuizPage = () => {
   
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/v1/questions/${topic}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/v1/questions/${topic}`);
         const shuffled = [...response.data];
         for (let i = shuffled.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
