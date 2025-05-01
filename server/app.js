@@ -72,7 +72,7 @@ app.get('/v1/questions/:collectionName', async (req, res) => {
     // list all collections once
     const collections = await db.listCollections().toArray();
 -   console.log('Available collections:', collections.map(c => c.name));
-+   console.log(`🔍 Available: ${collections.map(c => c.name).join(', ')}`);
++   console.log(` Available: ${collections.map(c => c.name).join(', ')}`);
 
     if (!collections.some(c => c.name === collectionName)) {
 +     console.warn(` Collection not found: ${collectionName}`);
