@@ -71,7 +71,7 @@ const App = () => {
       <ChatBot />
 
       {/* Footer */}
-      <footer className="w-full flex flex-col justify-center px-8 sm:px-15 text-white">
+      <footer className="w-full flex flex-col justify-center items-center-safe px-8 sm:px-15 text-white">
         {/* Top Section */}
         <div className="container flex flex-col md:flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-8">
 
