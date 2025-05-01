@@ -1,4 +1,5 @@
 import React from "react";
+import { Analytics } from "@vercel/analytics/react";
 import Aurora from "./components/Aurora";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import StartSessionButton from "./components/StartSessionButton";
@@ -238,6 +239,8 @@ const App = () => {
         </div>
       </footer>
 
+      {/* Vercel Analytics Component */}
+      <Analytics />
     </main>
   );
 };

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { inject } from '@vercel/analytics';
-import { Analytics } from '@vercel/analytics/react';
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from '@clerk/clerk-react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import SSOCallback from './pages/SSOCallback.jsx'
@@ -49,7 +48,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <RouterProvider router={router} />
       </ClerkLoaded>
     </ClerkProvider>
-    {/* Vercel Analytics Component */}
-    <Analytics />
   </React.StrictMode>
 );
