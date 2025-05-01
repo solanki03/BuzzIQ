@@ -3,7 +3,7 @@
 export const devs = [
     {
         name: "Sourav Pal",
-        linkedin: "https://www.linkedin.com/in/sourav-pal-659631266",
+        linkedin: "https://www.linkedin.com/in/souravpal18",
     },
     {
         name: "Solanki Singha",
@@ -11,11 +11,11 @@ export const devs = [
     },
     {
         name: "Sk Nasim Ali",
-        linkedin: "https://www.linkedin.com/in/sk-nasim-ali/",
+        linkedin: "https://www.linkedin.com/in/sk-nasim-ali",
     },
     {
         name: "Trishagni Mondal",
-        linkedin: "https://www.linkedin.com/in/trishagni-mondal-480a5b29a/",
+        linkedin: "https://www.linkedin.com/in/trishagni-mondal-480a5b29a",
     },
 ];
 

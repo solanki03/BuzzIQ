@@ -36,18 +36,30 @@
 3. Set up environment variables (see below)
 4. Run the development server using `npm run dev` or respective command for frontend/backend
 
-## 🔐 Environment Variables
+## 🔐 .env for frontend
 - `VITE_CLERK_PUBLISHABLE_KEY`
-- `MONGODB_URI`
+- `VITE_API_BASE_URL=http://localhost:5000`
 
-These should be placed in a `.env` file in both frontend and backend as needed.
+## 🔐 .env for backend
+- `PORT=5000`
+- `MONGODB_URI=your_mongo_uri`
 
 ## 🧭 Pages Overview
 - **Home Page** – Introduction to BuzzIQ and chatbot access
 - **Quiz Dashboard** – Displays available topics and quiz navigation
 - **Quiz Page** – Main quiz interface with live monitoring
 - **Result Page** – Displays score, download certificate (if eligible), and a rating system
+  
+
+## 📌 Future Enhancements
+- Leaderboard & Global Rankings
+- Admin Panel for uploading quizzes
+- AI-generated questions (GPT integration)
+
+## 👨‍💻 Developers
+- [Sourav Pal](https://www.linkedin.com/in/souravpal18)
+- [Solanki Singha](https://www.linkedin.com/in/solankisingha)
+- [SK Nasim Ali](https://www.linkedin.com/in/sk-nasim-ali)
 
 ## License
-
 This project is licensed under the **[MIT License](https://choosealicense.com/licenses/mit/)**. See the LICENSE file for more details.
