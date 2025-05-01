@@ -8,30 +8,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Enhanced CORS configuration
-const corsOptions = {
-  origin: ['https://buzz-iq.vercel.app', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+app.use(cors({
+  origin: '*',
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   credentials: true,
-  optionsSuccessStatus: 200
-};
-
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-// Explicitly handle OPTIONS requests
-// app.options('*', cors(corsOptions)); // Handle all OPTIONS requests
-app.options('/v1/results', cors(corsOptions));
-
-// Explicit OPTIONS handling for specific routes
-app.options('/v1/results', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://buzz-iq.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.sendStatus(200);
-});
+}));
 
 // Results database connection
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
@@ -43,32 +24,21 @@ const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
 // Route to fetch documents from any collection
 app.get('/v1/questions/:collectionName', async (req, res) => {
   try {
-    console.log(`Fetching collection: ${req.params.collectionName}`);
+    const collectionName = req.params.collectionName;
+    const db = mongoose.connection.db;
     
-    const db = mongoose.connection.useDb('BuzzIQ_Questions').db;
-    
-    console.log('Listing collections...');
+    // Validate collection exists 
     const collections = await db.listCollections().toArray();
-    console.log('Available collections:', collections.map(c => c.name));
-    
-    const collectionExists = collections.some(c => c.name === req.params.collectionName);
+    const collectionExists = collections.some(c => c.name === collectionName);
     
     if (!collectionExists) {
-      console.log('Collection not found');
       return res.status(404).json({ error: 'Collection not found' });
     }
 
-    console.log('Fetching documents...');
-    const docs = await db.collection(req.params.collectionName).find({}).toArray();
-    console.log(`Found ${docs.length} documents`);
-    
+    const docs = await db.collection(collectionName).find({}).toArray();
     res.json(docs);
   } catch (err) {
-    console.error('Full error:', err);
-    res.status(500).json({ 
-      error: err.message,
-      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 
