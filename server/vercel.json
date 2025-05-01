@@ -7,10 +7,15 @@
       }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/",
-        "methods": ["GET", "POST"]
-      }
-    ]
+    {
+      "src": "/v1/results",
+      "dest": "index.js",
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "src": "/v1/(.*)",
+      "dest": "index.js",
+      "methods": ["GET"]
+    }
+  ]
   }
