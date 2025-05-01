@@ -14,8 +14,6 @@ app.use(cors({
   credentials: true,
 }));
 
-
-
 // Results database connection
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
   dbName: 'BuzzIQ_Assects',
