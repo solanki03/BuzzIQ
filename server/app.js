@@ -14,6 +14,8 @@ app.use(cors({
   credentials: true,
 }));
 
+app.options('/v1/results', cors());
+
 // Results database connection
 // Replace your resultsDB connection with this:
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
