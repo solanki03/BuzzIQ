@@ -37,7 +37,7 @@ const UserProfile = ({ user }) => {
 
     setLoading(true);
     axios
-      .get(`http://localhost:5000/v1/chart/${user.id}`)
+      .get(`${import.meta.env.VITE_API_URL}/v1/chart/${user.id}`)
       .then(({ data: resp }) => {
         if (resp.success) {
           const fetched = resp.data;
