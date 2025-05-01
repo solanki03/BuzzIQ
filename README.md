@@ -56,10 +56,10 @@
 - Admin Panel for uploading quizzes
 - AI-generated questions (GPT integration)
 
-### 👨‍💻 Developers
-- [Sourav Pal](www.linkedin.com/in/souravpal18)
-- [Solanki singha]()
-- [SK Nasim Ali]()
+## 👨‍💻 Developers
+- [Sourav Pal](https://www.linkedin.com/in/souravpal18)
+- [Solanki Singha](https://www.linkedin.com/in/solankisingha)
+- [SK Nasim Ali](https://www.linkedin.com/in/sk-nasim-ali)
 
 ## License
 This project is licensed under the **[MIT License](https://choosealicense.com/licenses/mit/)**. See the LICENSE file for more details.
