@@ -8,20 +8,32 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
 
-app.options("/v1/results", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://buzz-iq.vercel.app");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.status(204).end();
-});
+const allowedOrigins = [
+  'https://buzz-iq.vercel.app', // Production
+  'http://localhost:5173'       // Local development
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    const msg = `CORS not allowed for origin ${origin}`;
+    return callback(new Error(msg), false);
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+}));
+
+// Explicit OPTIONS handler (works for both production and local)
+app.options('/v1/results', cors());
+
 
 // Results database connection
 // Replace your resultsDB connection with this:
@@ -148,7 +160,6 @@ function getResultModel(username) {
 
 // Update your POST endpoint like this:
 app.post("/v1/results", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://buzz-iq.vercel.app");
   try {
     const {
       userId,
