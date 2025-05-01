@@ -33,11 +33,11 @@ const App = () => {
 
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center text-white px-6 sm:px-10 mt-36 sm:mt-20">
-          <h2 className="text-4xl sm:text-5xl xl:text-7xl font-semibold">
+          <h2 className="text-2xl sm:text-5xl xl:text-7xl font-semibold">
             Are you a Trivia Titan? <br /> Prove it with{" "}
             <span className="font-Warnes! font-normal!">BuzzIQ</span>
           </h2>
-          <p className="mt-8 text-sm text-gray-400 sm:text-base md:w-1/2">
+          <p className="mt-8 text-xs text-gray-400 sm:text-base md:w-1/2">
             Dive into a world of diverse quizzes, from tech to trivia.
             Challenge your mind, discover your strengths, and see how you
             rank. Your brain&apos;s test adventure starts from here 🚀
@@ -59,7 +59,7 @@ const App = () => {
               alt="User3"
               className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
             />
-            <span className="ml-2 md:ml-4 text-[12px] sm:text-sm">
+            <span className="ml-2 md:ml-4 text-[11px] sm:text-sm">
               Join with 100+ users and start a new experience
             </span>
           </div>
@@ -74,14 +74,14 @@ const App = () => {
       {/* Footer */}
       <footer className="w-full flex flex-col justify-center items-center-safe px-8 sm:px-15 text-white">
         {/* Top Section */}
-        <div className="container flex flex-col md:flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-8">
+        <div className="container flex flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-4 md:py-8">
 
           {/* Branding */}
-          <div className="flex flex-col max-sm:items-center-safe items-start mb-6 md:mb-0">
-            <h2 className="text-2xl md:text-3xl font-Warnes! text-white">BuzzIQ</h2>
-            <p className="text-gray-400 text-sm sm:text-base">Get Smart. Get Buzzed.</p>
+          <div className="flex flex-col items-start mb-6 md:mb-0">
+            <h2 className="text-xl md:text-3xl font-Warnes! text-white">BuzzIQ</h2>
+            <p className="text-gray-400 text-xs sm:text-base">Get Smart. Get Buzzed.</p>
             {/* Social Media Icons */}
-            <div className="mt-3 flex gap-4 text-lg md:text-xl text-gray-400">
+            <div className="mt-1 md:mt-3 flex gap-4 text-lg md:text-xl text-gray-400">
               <a
                 href="https://github.com/solanki03"
                 target="_blank"
@@ -106,12 +106,12 @@ const App = () => {
           </div>
 
           {/* About & Legal Section */}
-          <div className="flex flex-col max-sm:items-center-safe items-start gap-2 text-[12px] md:text-sm mt-2 mb-6 md:mb-0">
+          <div className="flex flex-col max-sm:items-center-safe items-start gap-1 md:gap-2 text-[12px] md:text-sm mt-2 mb-6 md:mb-0">
 
             {/* About us */}
             <Dialog>
               <DialogTrigger asChild>
-                <button className="text-base font-semibold text-white mb-2">About Us</button>
+                <button className="text-sm md:text-base font-semibold text-white mb-1">About Us</button>
               </DialogTrigger>
               <DialogContent className="bg-slate-900/80 border-0 ring-1 ring-purple-400 py-9 px-8 max-h-3/5 overflow-y-scroll scrollbar-black">
                 <DialogClose className="absolute top-4 right-5">
@@ -134,7 +134,7 @@ const App = () => {
             {/* Terms of Service */}
             <Dialog>
               <DialogTrigger asChild>
-                <button className="text-base font-semibold text-white mb-2">Terms of Service</button>
+                <button className="text-sm md:text-base font-semibold text-white mb-1">Terms of Service</button>
               </DialogTrigger>
               <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
                 <DialogClose className="absolute top-4 right-5">
@@ -160,7 +160,7 @@ const App = () => {
             {/* Privacy Policy */}
             <Dialog>
               <DialogTrigger asChild>
-                <button className="text-base font-semibold text-white mb-2">Privacy Policy</button>
+                <button className="text-sm md:text-base font-semibold text-white mb-1">Privacy Policy</button>
               </DialogTrigger>
               <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
                 <DialogClose className="absolute top-4 right-5">
@@ -194,8 +194,8 @@ const App = () => {
           </div>
 
           {/* Services */}
-          <div className="max-sm:text-center text-gray-400 mb-6 md:mb-0">
-            <h3 className="text-base font-semibold text-white mb-2">Services</h3>
+          <div className="text-gray-400 mb-6 md:mb-0">
+            <h3 className="text-sm md:text-base max-sm:text-center font-semibold text-white mb-1">Services</h3>
             <ul className="grid grid-cols-2 gap-x-5 gap-y-1 text-[12px] md:text-sm mb-4 list-none">
               {services.map((service, index) => (
                 <li
@@ -210,8 +210,8 @@ const App = () => {
 
           {/* Developers info */}
           <div className="max-sm:text-center text-gray-400">
-            <h3 className="text-base font-semibold text-white mb-2">Developed by</h3>
-            <ul className="text-[12px] md:text-sm space-y-1">
+            <h3 className="text-sm md:text-base font-semibold text-white mb-1">Developed by</h3>
+            <ul className="text-xs md:text-sm space-y-1">
               {devs.map((dev, index) => (
                 <li key={index}>
                   <a
@@ -231,7 +231,7 @@ const App = () => {
         {/* Bottom Copyright Section */}
         <div className="w-full flex justify-center text-center mt-6">
           <div className="border-t border-gray-700 w-86 mb-5 pt-2">
-            <p className="text-sm text-gray-400">
+            <p className="text-xs md:text-sm text-gray-400">
               <span className="font-Warnes! font-medium!">BuzzIQ{" "}</span>
               &copy; {new Date().getFullYear()} All Rights Are Reserved.
             </p>

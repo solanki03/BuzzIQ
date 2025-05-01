@@ -3,7 +3,7 @@ import React from 'react'
 const DownloadBtn = ({ name, onClick = () => { } }) => {
     return (
         <button
-            className="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-[#F0ABFC] focus:outline-offset-4 overflow-hidden"
+            className="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-sm md:text-base rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-[#F0ABFC] focus:outline-offset-4 overflow-hidden"
             onClick={onClick}
         >
             <span className="relative z-20 text-[#F0ABFC]">{name}</span>

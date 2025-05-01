@@ -276,7 +276,7 @@ const Results = () => {
       />
 
       <div className="flex flex-col gap-7 items-center justify-center px-5 bg-black">
-        <h1 className="font-semibold text-2xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700">
+        <h1 className="font-semibold text-xl sm:text-4xl text-center block border-b-2 px-10 pb-4 border-slate-700">
           <span className="text-slate-300">
             Review Your Results & Learn More
           </span>
@@ -303,7 +303,7 @@ const Results = () => {
 
           <div className="flex flex-col md:flex-row justify-between gap-6 w-full">
             {/* Quiz results section */}
-            <div className="flex flex-col gap-4 max-md:min-w-[300px] md:w-1/2">
+            <div className="flex flex-col gap-4 max-md:min-w-[290px] md:w-1/2">
               <h2 className="text-2xl font-semibold text-center">
                 Quiz Results
               </h2>
@@ -371,7 +371,7 @@ const Results = () => {
 
       {/* Copyright section */}
       <div className="w-full flex justify-center text-center mt-5 lg:m-0">
-        <p className="text-sm text-gray-400">
+        <p className="text-xs md:text-sm text-gray-400">
           <span className="font-Warnes! font-medium!">BuzzIQ </span>
           &copy; {new Date().getFullYear()} All Rights Reserved
         </p>

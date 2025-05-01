@@ -54,11 +54,11 @@ export const Card = ({ className, children }) => {
 };
 
 export const CardTitle = ({ className, children }) => {
-  return <h4 className={cn("text-zinc-100 font-semibold tracking-wide mt-4 text-lg text-center", className)}>{children}</h4>;
+  return <h4 className={cn("text-zinc-100 font-semibold tracking-wide mt-4 text-base md:text-lg text-center", className)}>{children}</h4>;
 };
 
 export const CardDescription = ({ className, children }) => {
-  return <p className={cn("mt-5 text-zinc-400 tracking-wide leading-relaxed text-sm text-center mb-6", className)}>{children}</p>;
+  return <p className={cn("mt-5 text-zinc-400 tracking-wide leading-relaxed text-xs md:text-sm text-center mb-6", className)}>{children}</p>;
 };
 
 export const CardImage = ({ className, children }) => {

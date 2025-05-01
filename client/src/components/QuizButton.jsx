@@ -56,7 +56,7 @@ const QuizButton = ({ name, topic }) => {
                             <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-teal-400 via-blue-500 to-purple-500 p-[2px] opacity-40 transition-opacity duration-500 group-hover:opacity-100"></span>
                             <span className="relative z-10 block px-6 py-3 rounded-xl bg-gray-950">
                                 <div className="relative z-10 flex items-center space-x-2">
-                                    <span className="transition-all duration-500">{name}</span>
+                                    <span className="text-sm md:text-base transition-all duration-500">{name}</span>
                                 </div>
                             </span>
                         </div>
@@ -65,7 +65,7 @@ const QuizButton = ({ name, topic }) => {
             </div>
 
             {/* Instructions for the quizes */}
-            <DialogContent className={'bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-8'}>
+            <DialogContent className={'bg-slate-900/80 border-0! ring-1 ring-purple-400 h-3/5 max-h-auto max-sm:overflow-y-scroll scrollbar-black py-9 px-8'}>
                 <DialogClose className={'absolute top-4 right-5'}>
                     <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
@@ -73,10 +73,10 @@ const QuizButton = ({ name, topic }) => {
                 {isSignedIn ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle className={'text-fuchsia-400 text-center text-xl mb-2'}>Instructions</DialogTitle>
+                            <DialogTitle className={'text-fuchsia-400 text-center text-xl'}>Instructions</DialogTitle>
                         </DialogHeader>
 
-                        <DialogDescription className={'text-gray-300 px-2 font-medium'}>
+                        <DialogDescription className={'text-gray-300 md:px-2 font-medium'}>
                             <span className='inline-block'>1. This quiz contains 15 questions.</span>
                             <span className='inline-block'>2. You have 10 minutes to complete the quiz.</span>
                             <span className='inline-block'>3. The quiz cannot be paused once started.</span>
@@ -88,7 +88,7 @@ const QuizButton = ({ name, topic }) => {
                             <span className='inline-block'>9. You must need to allow camera access to start the quiz.</span>
                         </DialogDescription>
 
-                        <DialogFooter className={'flex-col! items-center mt-4'}>
+                        <DialogFooter className={'flex-col! items-center'}>
                             <div className='text-sm! text-fuchsia-300 flex items-center gap-2 justify-center mb-5'>
                                 <input
                                     type="checkbox"

@@ -277,7 +277,7 @@ const QuizPage = () => {
       />
 
       <div className="flex flex-col gap-9 items-center justify-center">
-        <h1 className="font-semibold text-2xl sm:text-4xl text-center text-slate-300 block border-b-2 px-10 pb-4 border-slate-700">
+        <h1 className="font-semibold text-xl sm:text-4xl text-center text-slate-300 block border-b-2 px-10 pb-4 border-slate-700">
           <span>{formatTopic(topic)}</span>
         </h1>
 
@@ -292,8 +292,8 @@ const QuizPage = () => {
                 </span>
               </div>
 
-              <div className="flex flex-col gap-8 mt-5">
-                <div className="text-lg md:text-xl font-semibold text-fuchsia-400 px-3">
+              <div className="flex flex-col gap-5 md:gap-8 mt-5">
+                <div className="text-base md:text-xl font-semibold text-fuchsia-400 px-3">
                   <p>{currentQuestionIndex + 1}. {currentQuestion.question}</p>
                 </div>
 
