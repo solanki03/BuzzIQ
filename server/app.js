@@ -52,6 +52,12 @@ app.get('/health', async (req, res) => {
   }
 });
 
+//seeing cors issues? try this
+app.get('/test-cors', (req, res) => {
+  res.json({ message: "CORS test successful" });
+});
+
+
 // Route to fetch documents from any collection
 app.get('/v1/questions/:collectionName', async (req, res) => {
   try {
