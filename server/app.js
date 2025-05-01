@@ -63,23 +63,36 @@ app.get('/health/detailed', async (req, res) => {
 // Route to fetch documents from any collection
 app.get('/v1/questions/:collectionName', async (req, res) => {
   try {
-    const collectionName = req.params.collectionName;
-    const db = mongoose.connection.db;
-    
-    // Validate collection exists 
+    const { collectionName } = req.params;
++   console.log(`🗄  Looking for collection: ${collectionName}`);
+
+    // get the DB handle
+    const db = mongoose.connection.useDb('BuzzIQ_Questions').db;
+
+    // list all collections once
     const collections = await db.listCollections().toArray();
-    const collectionExists = collections.some(c => c.name === collectionName);
-    
-    if (!collectionExists) {
+-   console.log('Available collections:', collections.map(c => c.name));
++   console.log(`🔍 Available: ${collections.map(c => c.name).join(', ')}`);
+
+    if (!collections.some(c => c.name === collectionName)) {
++     console.warn(` Collection not found: ${collectionName}`);
       return res.status(404).json({ error: 'Collection not found' });
     }
 
++   console.log(`📥 Fetching docs from ${collectionName}…`);
     const docs = await db.collection(collectionName).find({}).toArray();
-    res.json(docs);
++   console.log(`✅ Retrieved ${docs.length} documents`);
+
+    return res.json(docs);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('❗ Route error:', err);
+    return res.status(500).json({
+      error: err.message,
+...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
   }
 });
+
 
 // Helper function to create collection-safe name
 const createCollectionName = (username) => {
