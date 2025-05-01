@@ -57,9 +57,9 @@
 - AI-generated questions (GPT integration)
 
 ### 👨‍💻 Developers
-- [Sourav Pal] (www.linkedin.com/in/souravpal18)
-- [Solanki singha] ()
-- [SK Nasim Ali] ()
+- [Sourav Pal](www.linkedin.com/in/souravpal18)
+- [Solanki singha]()
+- [SK Nasim Ali]()
 
 ## License
 This project is licensed under the **[MIT License](https://choosealicense.com/licenses/mit/)**. See the LICENSE file for more details.
