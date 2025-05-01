@@ -10,15 +10,54 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: '*',
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  methods: ['GET','POST'],
   credentials: true,
 }));
 
 // Results database connection
+// Replace your resultsDB connection with this:
 const resultsDB = mongoose.createConnection(process.env.MONGODB_URI, {
   dbName: 'BuzzIQ_Assects',
- // useNewUrlParser: true,
- //cls useUnifiedTopology: true
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000
+});
+
+// Add connection event listeners
+resultsDB.on('connected', () => {
+  console.log('Results DB connected');
+});
+ 
+resultsDB.on('error', (err) => { 
+  console.error('Results DB connection error:', err);
+});
+
+// Add these routes to app.js
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'UP',
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+    resultsDbStatus: resultsDB.readyState === 1 ? 'Connected' : 'Disconnected'
+  });
+});
+
+app.get('/health/detailed', async (req, res) => {
+  try {
+    const mainDbCollections = await mongoose.connection.db.listCollections().toArray();
+    const resultsDbCollections = await resultsDB.db.listCollections().toArray();
+    
+    res.status(200).json({
+      mainDb: {
+        status: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+        collections: mainDbCollections.map(c => c.name)
+      },
+      resultsDb: {
+        status: resultsDB.readyState === 1 ? 'Connected' : 'Disconnected',
+        collections: resultsDbCollections.map(c => c.name)
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Route to fetch documents from any collection

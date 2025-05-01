@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <ClerkLoading>
         <main className="h-dvh w-full flex items-center justify-center flex-col">
@@ -48,5 +48,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <RouterProvider router={router} />
       </ClerkLoaded>
     </ClerkProvider>
-  </React.StrictMode>
+  </>
 );
