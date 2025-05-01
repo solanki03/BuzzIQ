@@ -31,16 +31,8 @@ resultsDB.on('error', (err) => {
   console.error('Results DB connection error:', err);
 });
 
-// Add these routes to app.js
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'UP',
-    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
-    resultsDbStatus: resultsDB.readyState === 1 ? 'Connected' : 'Disconnected'
-  });
-});
 
-app.get('/health/detailed', async (req, res) => {
+app.get('/health', async (req, res) => {
   try {
     const mainDbCollections = await mongoose.connection.db.listCollections().toArray();
     const resultsDbCollections = await resultsDB.db.listCollections().toArray();
