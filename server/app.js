@@ -84,27 +84,19 @@ app.get("/test-cors", (req, res) => {
 app.get("/v1/questions/:collectionName", async (req, res) => {
   try {
     const { collectionName } = req.params;
-    +console.log(`🗄  Looking for collection: ${collectionName}`);
 
     // get the DB handle
     const db = mongoose.connection.useDb("BuzzIQ_Questions").db;
 
     // list all collections once
     const collections = await db.listCollections().toArray();
-    -console.log(
-      "Available collections:",
-      collections.map((c) => c.name)
-    );
-    +console.log(` Available: ${collections.map((c) => c.name).join(", ")}`);
 
     if (!collections.some((c) => c.name === collectionName)) {
       +console.warn(` Collection not found: ${collectionName}`);
       return res.status(404).json({ error: "Collection not found" });
     }
 
-    +console.log(`📥 Fetching docs from ${collectionName}…`);
     const docs = await db.collection(collectionName).find({}).toArray();
-    +console.log(`✅ Retrieved ${docs.length} documents`);
 
     return res.json(docs);
   } catch (err) {
@@ -234,7 +226,6 @@ app.post("/v1/results", async (req, res) => {
       },
     });
 
-    console.log("Result saved:", result);
   } catch (err) {
     console.error("Error saving results:", err);
 

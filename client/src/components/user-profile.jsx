@@ -33,7 +33,6 @@ const UserProfile = ({ user }) => {
   // fetch whenever sheet opens
   useEffect(() => {
     if (!isSheetOpen || !user?.id) return;
-    console.log(user.fullName)
 
     setLoading(true);
     axios

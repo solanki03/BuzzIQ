@@ -30,9 +30,8 @@ export function FeedbackDialog() {
   }, []);
 
   const handleStarClick = (star) => {
+    // Set the rating based on the star clicked
     setRating(star);
-    //sending rating to server
-    console.log(`User rated ${star} star`);
   }
 
   const handleSubmit = () => {
@@ -49,7 +48,6 @@ export function FeedbackDialog() {
 
     existingFeedback.push(newFeedback);
     // Save the updated feedback array to localStorage
-    console.log(existingFeedback);
     localStorage.setItem("feedbacks", JSON.stringify(existingFeedback));
 
     toast.success("Thank you for your feedback!");

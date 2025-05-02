@@ -102,7 +102,7 @@ export function SignUpPage({ afterSignUpUrl = "/" }) {
   return (
     <div className="relative p-[1.5px] overflow-hidden rounded-xl">
       <span className="absolute inset-0 bg-gradient-to-r from-[#A07CFE] via-[#FE8FB5] to-[#FFBE7B] animate-spin-border" />
-      <Card className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-black px-6 py-8 text-white">
+      <Card className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-black px-1.5 md:px-6 py-8 text-white">
         <CardHeader className="text-center">
           <CardTitle>Sign Up</CardTitle>
           <DialogDescription className="opacity-60">Create a new BuzzIQ account</DialogDescription>

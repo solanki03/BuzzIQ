@@ -65,11 +65,8 @@ export function SignInPage({afterSignInUrl}) {
     try {
       const result = await signIn.create({ identifier: email, password });
       if (result.status === "complete") {
-        console.log("Signed in:", result);
         window.location.href = afterSignInUrl ? afterSignInUrl : "/"; // Redirect to home page
-      } else {
-        console.log("Further verification required:", result);
-      }
+      } 
     } catch (err) {
       setError(err.errors?.[0]?.message || "Login failed.");
     } finally {
@@ -125,11 +122,8 @@ export function SignInPage({afterSignInUrl}) {
       });
 
       if (result.status === "complete") {
-        console.log("Password reset successfully!");
         window.location.href = afterSignInUrl ? afterSignInUrl : "/"; // Redirect to home page
-      } else {
-        console.log("Further verification required:", result);
-      }
+      } 
     } catch (err) {
       setError(err.errors?.[0]?.message || "Failed to reset password.");
     } finally {
@@ -155,7 +149,7 @@ export function SignInPage({afterSignInUrl}) {
   return (
     <div className="relative p-[1.5px] overflow-hidden rounded-xl">
       <span className="absolute inset-0 bg-gradient-to-r from-[#A07CFE] via-[#FE8FB5] to-[#FFBE7B] animate-spin-border" />
-      <Card className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-black px-6 py-8 text-white">
+      <Card className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-black px-1.5 md:px-6 py-8 text-white">
         <CardHeader className="text-center">
           <CardTitle>Sign In</CardTitle>
           <DialogDescription>Sign in to BuzzIQ</DialogDescription>
