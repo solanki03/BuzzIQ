@@ -33,7 +33,7 @@ const QuizButton = ({ name, topic }) => {
     //acess camera permission
     const handleStartQuiz = async () => {
         if (!isChecked) {
-            alert("Please read all the instructions to start the quiz.")
+            alert("Please read all instructions and tick the checkbox below to begin the quiz.")
             return;
         };
         try {

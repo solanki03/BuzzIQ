@@ -67,7 +67,7 @@ const UserProfile = ({ user }) => {
         </Avatar>
       </SheetTrigger>
 
-      <SheetContent className="h-full bg-zinc-950 px-5 py-5 overflow-y-auto scrollbar-black">
+      <SheetContent className="h-full bg-zinc-950 px-5 py-5 overflow-y-auto scrollbar-black z-50">
         <SheetHeader className="p-0 text-2xl gap-0">
           <SheetTitle className="leading-tight capitalize">
             {user?.fullName || "User Profile"}
