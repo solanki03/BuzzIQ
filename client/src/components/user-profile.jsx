@@ -76,7 +76,7 @@ const UserProfile = ({ user }) => {
           <SheetDescription className="text-xs text-gray-400">
             Your personalized dashboard
           </SheetDescription>
-          <div className="flex w-full justify-between mt-4 opacity-80">
+          <div className="flex w-full justify-between mt-4 opacity-80 max-[360px]:flex-col">
             <Button
               onClick={openUserProfile}
               className="bg-black text-white hover:bg-neutral-900 transition-all duration-500 border"
@@ -86,7 +86,7 @@ const UserProfile = ({ user }) => {
 
             <Button
               onClick={() => signOut()}
-              className="bg-zinc-900 hover:bg-zinc-950 text-white hover:text-red-500 duration-300 transition-all"
+              className="bg-zinc-900 hover:bg-zinc-950 text-white hover:text-red-500 duration-300 transition-all max-[360px]:mt-2"
             >
               Log Out
             </Button>

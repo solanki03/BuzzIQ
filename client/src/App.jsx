@@ -43,23 +43,23 @@ const App = () => {
             rank. Your brain&apos;s test adventure starts from here 🚀
           </p>
 
-          <div className="mt-6 flex items-center">
+          <div className="mt-6 flex items-center justify-center">
             <img
               src="https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="User1"
-              className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover"
+              className="w-4.5 h-4.5 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover"
             />
             <img
               src="https://plus.unsplash.com/premium_photo-1689551671548-79ff30459d2a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fHw%3D"
               alt="User2"
-              className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
+              className="w-4.5 h-4.5 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
             />
             <img
               src="https://plus.unsplash.com/premium_photo-1689977807477-a579eda91fa2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="User3"
-              className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
+              className="w-4.5 h-4.5 sm:w-8 sm:h-8 rounded-full border-2 border-white object-cover -ml-3"
             />
-            <span className="ml-2 md:ml-4 text-[11px] sm:text-sm">
+            <span className="ml-1.5 md:ml-4 text-[10px] sm:text-sm">
               Join with 100+ users and start a new experience
             </span>
           </div>
@@ -72,7 +72,7 @@ const App = () => {
       <ChatBot />
 
       {/* Footer */}
-      <footer className="w-full flex flex-col justify-center items-center-safe px-8 sm:px-15 text-white">
+      <footer className="w-full flex flex-col justify-center items-center-safe px-5 sm:px-15 text-white">
         {/* Top Section */}
         <div className="container flex flex-row md:gap-8 flex-wrap justify-around max-sm:items-center-safe border-t border-gray-700 py-4 md:py-8">
 

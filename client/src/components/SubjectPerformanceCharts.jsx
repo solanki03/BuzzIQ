@@ -228,7 +228,7 @@ const SubjectPerformanceAccordion = ({ topic, userId }) => {
             />
           </div>
 
-          <div className="text-sm w-full font-medium text-gray-600 flex justify-between">
+          <div className="text-sm w-full font-medium text-gray-600 flex max-sm:flex-col justify-between">
             <span>Total attempts: {stats.totalAttempts}</span>
             <span>
               Questions/attempt: {stats.totalQuestions / stats.totalAttempts}

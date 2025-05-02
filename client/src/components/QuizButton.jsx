@@ -65,7 +65,7 @@ const QuizButton = ({ name, topic }) => {
             </div>
 
             {/* Instructions for the quizes */}
-            <DialogContent className={'bg-slate-900/80 border-0! ring-1 ring-purple-400 h-3/5 max-h-auto max-sm:overflow-y-scroll scrollbar-black py-9 px-8'}>
+            <DialogContent className={'bg-slate-900/80 border-0! ring-1 ring-purple-400 h-3/5 max-sm:overflow-y-scroll scrollbar-black py-9 px-8'}>
                 <DialogClose className={'absolute top-4 right-5'}>
                     <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
