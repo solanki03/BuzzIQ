@@ -71,7 +71,7 @@ const ParticipationChart = ({ rawData, loading }) => {
           tension: 0.3,
           fill: true,
           pointBackgroundColor: "#3b82f6",
-          pointRadius: ctx => ctx.dataIndex % 2 === 0 ? 5 : 0,
+          pointRadius: ctx => ctx.dataIndex % 2 === 0 ? 5 : 3,
           pointHoverRadius: 10,
         }],
       },

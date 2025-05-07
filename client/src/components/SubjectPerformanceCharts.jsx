@@ -41,24 +41,22 @@ const SubjectPerformanceAccordion = ({ topic, userId }) => {
           totalAttempts,
         } = response.data.data;
 
+        const totalAnswered =
+          totalCorrectAnswers + totalWrongAnswers + totalNotAttemptedAnswers;
+
         const percentageCorrect =
-          totalQuestions > 0
-            ? Math.round(
-                (totalCorrectAnswers / (totalQuestions * totalAttempts)) * 100
-              )
+          totalAnswered > 0
+            ? Math.round((totalCorrectAnswers / totalAnswered) * 100)
             : 0;
+
         const percentageWrong =
-          totalQuestions > 0
-            ? Math.round(
-                (totalWrongAnswers / (totalQuestions * totalAttempts)) * 100
-              )
+          totalAnswered > 0
+            ? Math.round((totalWrongAnswers / totalAnswered) * 100)
             : 0;
+
         const percentageUnattempted =
-          totalQuestions > 0
-            ? Math.round(
-                (totalNotAttemptedAnswers / (totalQuestions * totalAttempts)) *
-                  100
-              )
+          totalAnswered > 0
+            ? Math.round((totalNotAttemptedAnswers / totalAnswered) * 100)
             : 0;
 
         const chartData = {
@@ -114,13 +112,13 @@ const SubjectPerformanceAccordion = ({ topic, userId }) => {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {loading && (
-        <div className="w-full py-2 flex flex-col items-center justify-center">
+        <div className="w-full py-4 flex flex-col items-center justify-center gap-4">
           <div className="w-64 h-64 rounded-full overflow-hidden">
             <Skeleton className="w-full h-full rounded-full" />
           </div>
-          <div className="flex justify-between w-full">
-            <Skeleton className="h-5 w-24 rounded" />
-            <Skeleton className="h-5 w-24 rounded" />
+          <div className="flex justify-between w-full max-sm:flex-col gap-2">
+            <Skeleton className="h-5 w-24 md:w-32 rounded" />
+            <Skeleton className="h-5 w-32 rounded" />
           </div>
         </div>
       )}
