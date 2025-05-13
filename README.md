@@ -55,6 +55,7 @@
 - Leaderboard & Global Rankings
 - Admin Panel for uploading quizzes
 - AI-generated questions (GPT integration)
+- Weekly quiz contest
 
 ## 👨‍💻 Developers
 - [Sourav Pal](https://www.linkedin.com/in/souravpal18)
