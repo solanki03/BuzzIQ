@@ -178,3 +178,12 @@ button, a{
     background-color: #555;
   }
 }
+
+canvas.confetti-canvas {
+  position: fixed !important;
+  inset: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none;
+  z-index: 9999;
+}
