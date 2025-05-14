@@ -159,7 +159,7 @@ export function SignInPage({afterSignInUrl}) {
           {!successfulCreation ? (
             <form onSubmit={handleLogin}>
               <div className="grid gap-4">
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
@@ -170,7 +170,7 @@ export function SignInPage({afterSignInUrl}) {
                     required
                   />
                 </div>
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"

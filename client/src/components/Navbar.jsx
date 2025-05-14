@@ -13,7 +13,7 @@ const Navbar = ({ className }) => {
   const showSheet = location.pathname === "/" || location.pathname === "/quiz-dashboard";
 
   return (
-    <nav className={`w-full flex justify-between items-center px-6 sm:px-10 py-6 absolute top-0 z-10 ${className}`}>
+    <nav className={`w-full flex justify-between items-center px-6 sm:px-10 py-6 absolute top-0 z-40! ${className}`}>
       <Link to="/">
         <h1 className="text-white text-2xl md:text-3xl font-Warnes! cursor-pointer">
           BuzzIQ

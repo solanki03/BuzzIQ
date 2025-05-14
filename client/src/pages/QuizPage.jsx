@@ -235,7 +235,9 @@ const QuizPage = () => {
           timeTaken,
         };
 
-        navigate('/quiz-results', { state: quizData });
+        const attemptId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+        navigate('/quiz-results', { state: { ...quizData, attemptId } });
       };
 
       calculateAndSendResults();

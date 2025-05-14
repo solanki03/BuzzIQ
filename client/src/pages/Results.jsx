@@ -17,6 +17,7 @@ const Results = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUser();
+
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
   const saveAttempts = useRef(0);
@@ -25,16 +26,14 @@ const Results = () => {
   const toastId = useRef(null);
   const printRef = useRef(null);
 
-  // Safely extract quiz results with proper defaults
-  const quizData = location.state || {};
+  const attemptId = location.state?.attemptId;
   const {
     topic = null,
     totalQuestions = 0,
     results = [],
     timeTaken = 0,
-  } = quizData;
+  } = location.state || {};
 
-  // Calculate metrics
   const correctAnswers = results.filter((q) => q.isCorrect).length;
   const attemptedQuestions = results.filter(
     (q) => q.userAnswer !== undefined && q.userAnswer !== null
@@ -47,14 +46,13 @@ const Results = () => {
     totalQuestions > 0
       ? ((correctAnswers / totalQuestions) * 100).toFixed(2)
       : 0;
-  // Calculate username
+
   const username =
     user?.username ||
     user?.fullName ||
     user?.primaryEmailAddress?.emailAddress ||
     "Guest";
 
-  // Format time taken
   const formatTimeTaken = (seconds) => {
     if (typeof seconds !== "number" || seconds < 0) return "0 min 0 sec";
     const minutes = Math.floor(seconds / 60);
@@ -62,7 +60,6 @@ const Results = () => {
     return `${minutes} min ${remainingSeconds} sec`;
   };
 
-  // Format topic name
   const formatTopicName = (str) => {
     if (!str) return "Quiz Results";
     return str
@@ -73,7 +70,6 @@ const Results = () => {
 
   const formattedTopic = formatTopicName(topic);
 
-  // Result info display
   const resultInfo = [
     { label: "Username", value: username },
     { label: "Topic", value: formattedTopic },
@@ -95,14 +91,30 @@ const Results = () => {
       saveAttempts.current >= maxAttempts
     )
       return;
+
     setIsSaving(true);
     toast.dismiss(toastId.current);
+
     const attempt = saveAttempts.current + 1;
     toastId.current = toast.loading(
       `Saving results (attempt ${attempt}/${maxAttempts})...`
     );
 
     try {
+      // First check if attemptId exists
+      const checkRes = await axios.get(
+        `${import.meta.env.VITE_API_URL}/v2/results/cheak/${user.id}`
+      );
+
+      // If attemptId exists, skip saving and show a message
+      if (checkRes.data.attemptIds.includes(attemptId)) {
+        toast.dismiss(toastId.current);
+        toast.success("Results already saved! ⚠️");
+        setHasSaved(true);
+        return;
+      }
+
+      // Proceed with saving new results
       const payload = {
         userId: user.id,
         username,
@@ -112,13 +124,17 @@ const Results = () => {
         wrongAnswers,
         notAttempted,
         timeTaken,
+        attemptId,
       };
+
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/v1/results`,
         payload
       );
+
       if (!data.success)
         throw new Error(data.error || "Failed to save results");
+
       toast.dismiss(toastId.current);
       toast.success("Results saved successfully!");
       setHasSaved(true);
@@ -126,7 +142,8 @@ const Results = () => {
       saveAttempts.current += 1;
       const msg = err.response?.data?.error || err.message;
       toast.dismiss(toastId.current);
-      toast.error(`Error saving results: ${msg}`);
+      toast.error(`Error: ${msg}`);
+
       if (saveAttempts.current < maxAttempts) {
         setTimeout(saveResults, retryDelay);
       }
@@ -138,102 +155,61 @@ const Results = () => {
     topic,
     hasSaved,
     isSaving,
-    formattedTopic,
-    totalQuestions,
-    correctAnswers,
-    wrongAnswers,
-    notAttempted,
-    timeTaken,
+    saveAttempts,
+    maxAttempts,
+    retryDelay,
+    attemptId,
   ]);
 
-  // Trigger save once on mount; retries handled inside
   useEffect(() => {
     saveResults();
   }, []);
 
-  //prevent browser reload and loss of data(ask for confirmation)
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      e.preventDefault();
-      e.returnValue = ""; // This is required for Chrome
-      return ""; // This is required for Firefox
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-
-  // Prevent going back to QuizPage
-  useEffect(() => {
-    const handleBackNavigation = (e) => {
-      e.preventDefault();
-      navigate("/quiz-dashboard", { replace: true });
-    };
-
-    window.history.pushState(null, "", window.location.href);
-    window.addEventListener("popstate", handleBackNavigation);
-
-    return () => {
-      window.removeEventListener("popstate", handleBackNavigation);
-      toast.dismiss(toastId.current);
-    };
-  }, [navigate]);
-
-  // Redirect if no state
   useEffect(() => {
     if (!location.state) {
       navigate("/quiz-dashboard", { replace: true });
     }
   }, [location.state, navigate]);
 
-  // Download Certificate
   const downloadCertificate = async () => {
     const certificateRef = printRef.current;
-    if (!certificateRef) {
-      console.error('Certificate element not found');
-      return;
-    }
+    if (!certificateRef) return;
 
     try {
-      // Small delay to ensure the DOM is fully painted
       await new Promise((resolve) => setTimeout(resolve, 300));
-
       const canvas = await html2canvas(certificateRef, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: null,
-        logging: true,
-        width: 1122, // Force width to A4 landscape
-        height: 793  // Force height to A4 landscape
+        width: 1122,
+        height: 793,
       });
 
-      if (canvas.width === 0 || canvas.height === 0) {
-        console.error("Captured blank canvas! Cannot generate certificate.");
-        return;
-      }
+      if (!canvas.width || !canvas.height) return;
 
       const imgData = canvas.toDataURL("image/png");
-
       const pdf = new jsPDF({
         orientation: "landscape",
-        unit: "pt",  // Use 'pt' (1/72 inch) for real-world sizing
+        unit: "pt",
         format: "a4",
         putOnlyUsedFonts: true,
       });
 
+      const margin = 20;
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const margin = 20; // Margin for the PDF
-
-      pdf.addImage(imgData, "PNG", margin, margin, pdfWidth - 2 * margin, pdfHeight - 2 * margin);
+      pdf.addImage(
+        imgData,
+        "PNG",
+        margin,
+        margin,
+        pdfWidth - 2 * margin,
+        pdfHeight - 2 * margin
+      );
       pdf.save(`BuzzIQ_Certificate_${username}.pdf`);
       toast.success("Certificate downloaded successfully!");
-
     } catch (error) {
-      console.error("Error generating certificate PDF:", error);
       toast.error("Failed to download certificate.");
     }
   };
@@ -288,14 +264,14 @@ const Results = () => {
             <button
               title="Go to Home Page"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-              onClick={() => navigate("/", { replace: true })}
+              onClick={() => navigate("/")}
             >
               <House />
             </button>
             <button
               title="Go to Dashboard"
               className="text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-200 ease-in-out w-11 h-11 rounded-full bg-slate-800/50 flex items-center justify-center shadow-md ring-1 ring-fuchsia-300 hover:ring-fuchsia-400 active:ring-fuchsia-500"
-              onClick={() => navigate("/quiz-dashboard", { replace: true })}
+              onClick={() => navigate("/quiz-dashboard")}
             >
               <Logs />
             </button>
@@ -342,13 +318,16 @@ const Results = () => {
                 username={username}
                 subject={formattedTopic}
                 percentage={percentage}
-                date={new Date().toLocaleDateString('en-GB')}
+                date={new Date().toLocaleDateString("en-GB")}
               />
             </div>
 
             {/* Download certificate button */}
             {percentage >= 65 ? (
-              <DownloadBtn name="Claim Your Certificate" onClick={downloadCertificate} />
+              <DownloadBtn
+                name="Claim Your Certificate"
+                onClick={downloadCertificate}
+              />
             ) : (
               <p className="text-sm text-gray-300 text-center bg-slate-800 rounded-sm px-4 py-2">
                 <b>Note:</b> Earn your certificate by scoring 65% or higher!
@@ -358,7 +337,9 @@ const Results = () => {
             {/* Retake quiz button */}
             <GradientBtn
               name="Retake Quiz"
-              onClick={() => navigate(`/quiz/${topic || "computer_fundamentals"}`)}
+              onClick={() =>
+                navigate(`/quiz/${topic || "computer_fundamentals"}`)
+              }
             />
           </div>
         </div>
