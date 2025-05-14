@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { devs, aboutUsContent, termsOfService, privacyPolicy, services } from "./utils/info.js";
+import Celebratebtn from "./components/Celebratebtn";
 
 const App = () => {
 
@@ -30,6 +31,8 @@ const App = () => {
       <div className="h-dvh w-full flex flex-col items-center justify-center">
         {/* Navigation */}
         <Navbar className="bg-transparent" />
+        {/*Celebration button added*/} 
+      <Celebratebtn />
 
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center text-white px-6 sm:px-10 mt-36 sm:mt-20">
