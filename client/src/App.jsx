@@ -99,7 +99,7 @@ const App = () => {
               >
                 <i className="fab fa-linkedin"></i>
               </a>
-              <a href="#" className="hover:text-white transition-colors">
+              <a href=" https://x.com/souravpal01629?t=fXghrArAJhay6YytgmjAmQ&s=08 " className="hover:text-white transition-colors">
                 <i className="fab fa-x-twitter"></i>
               </a>
               <a href="#" className="hover:text-white transition-colors">
