@@ -25,7 +25,7 @@ const Chatbot = () => {
 
       {/* Chatbox Popup */}
       {isOpen && (
-        <div className="fixed z-20 bottom-20 right-6 w-80 h-[600px] bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div className="fixed z-60 bottom-20 right-6 w-80 h-[600px] bg-white rounded-xl shadow-2xl overflow-hidden">
           <iframe
             src="https://www.chatbase.co/chatbot-iframe/m6oOAmxpSuFs-JVdm72G0"
             width="100%"

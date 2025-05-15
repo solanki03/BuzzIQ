@@ -31,7 +31,7 @@ const Celebratebtn = () => {
       />
       <button
         onClick={handleClick}
-        className="flex items-center bg-[#1f1f1f] border border-slate-700 px-4 py-2 rounded-full text-white shadow-lg hover:border-slate-500 transition-all duration-300 fixed top-25 md:top-20 z-50"
+        className="flex items-center bg-[#1f1f1f] border border-slate-700 px-4 py-2 rounded-full text-white shadow-lg hover:border-slate-500 transition-all duration-300 absolute top-25 md:top-20 z-30"
       >
         <span className="font-semibold text-xs">We just launched!</span>
         <div className="h-5 w-px bg-gray-600 mx-3" />
