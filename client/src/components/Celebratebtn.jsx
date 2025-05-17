@@ -31,11 +31,11 @@ const Celebratebtn = () => {
       />
       <button
         onClick={handleClick}
-        className="flex items-center bg-[#1f1f1f] border border-slate-700 px-4 py-2 rounded-full text-white shadow-lg hover:border-slate-500 transition-all duration-300 absolute top-25 md:top-20 z-30"
+        className="flex items-center bg-[#1f1f1f] border border-slate-700 px-4 py-2 rounded-full text-white shadow-lg hover:border-slate-500 transition-all duration-300 absolute top-25 md:top-20 z-30 space-x-3 cursor-pointer"
       >
         <span className="font-semibold text-xs">We just launched!</span>
         <div className="h-5 w-px bg-gray-600 mx-3" />
-        <div className="bg-[#111] p-2 rounded-full hover:bg-[#222] transition-colors">
+        <div className="bg-[#111] p-2 rounded-full hover:bg-[#222] transition-colors flex items-center justify-center">
           <PartyPopper className="h-3 w-3 text-white" />
         </div>
       </button>
