@@ -16,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
   'https://buzz-iq.vercel.app',
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'https://buzziq-server.onrender.com',
 ];
 
 app.use(cors({
