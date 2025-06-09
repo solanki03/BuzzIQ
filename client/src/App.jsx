@@ -116,7 +116,7 @@ const App = () => {
               <DialogTrigger asChild>
                 <button className="text-sm md:text-base font-semibold text-white mb-1">About Us</button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900/80 border-0 ring-1 ring-purple-400 py-9 px-8 max-h-3/5 overflow-y-scroll scrollbar-black">
+              <DialogContent className="bg-slate-900/80 border-0 ring-1 ring-purple-400 py-9 px-8 max-h-3/5 overflow-y-scroll no-scrollbar">
                 <DialogClose className="absolute top-4 right-5">
                   <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
@@ -139,7 +139,7 @@ const App = () => {
               <DialogTrigger asChild>
                 <button className="text-sm md:text-base font-semibold text-white mb-1">Terms of Service</button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
+              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll no-scrollbar">
                 <DialogClose className="absolute top-4 right-5">
                   <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
@@ -165,7 +165,7 @@ const App = () => {
               <DialogTrigger asChild>
                 <button className="text-sm md:text-base font-semibold text-white mb-1">Privacy Policy</button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll scrollbar-black">
+              <DialogContent className="bg-slate-900/80 border-0! ring-1 ring-purple-400 py-9 px-4 md:px-8 max-h-3/4 overflow-y-scroll no-scrollbar">
                 <DialogClose className="absolute top-4 right-5">
                   <i className="fa-solid fa-xmark text-fuchsia-300"></i>
                 </DialogClose>
