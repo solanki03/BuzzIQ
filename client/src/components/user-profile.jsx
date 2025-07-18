@@ -75,7 +75,7 @@ const UserProfile = ({ user }) => {
           <SheetDescription className="text-xs text-gray-400">
             Your personalized dashboard
           </SheetDescription>
-          <div className="flex w-full justify-between mt-4 opacity-80 max-[360px]:flex-col">
+          <div className="flex w-full justify-between gap-2 mt-4 opacity-80 text-sm md:text-base max-[360px]:flex-col">
             <Button
               onClick={openUserProfile}
               className="bg-black text-white hover:bg-neutral-900 transition-all duration-500 border"
