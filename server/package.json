@@ -8,6 +8,9 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js"
   },
+  "engines": {
+  "node": ">=22 <25"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
