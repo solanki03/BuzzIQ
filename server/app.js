@@ -266,4 +266,10 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+// for Uptime rooboot to keep MO cluster alive
+app.get("/api/ping", (req, res) => {
+  res.send("Server is alive");
+});
+
+
 module.exports = app;
